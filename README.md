@@ -1,2 +1,2 @@
 # api-workspace
-OpenAPI Hosting
+WorkSpace for Hosting
