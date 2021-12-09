@@ -3,7 +3,7 @@ info:
   version: 1.0.0
   title: API Template
   x-logo:
-    url: https://github-readme-stats.vercel.app/api/pin/?username=kawano-020&repo=api-workspace&show_owner=true
+    url: https://github-readme-stats.vercel.app/api/pin/?username=kawano-020&repo=api-workspace&show_owner=true&show_icons=true
   description: >-
     A sample API that uses a sample-site as an example to demonstrate features in
     the OpenAPI 3.0 specification
