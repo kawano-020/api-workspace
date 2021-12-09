@@ -17,6 +17,12 @@ jobs:
           node-version: '16'
           cache: npm
           cache-dependency-path: '**/package-lock.json'
+      
+      - name: Set up Redoc CLI
+        run: npm install -g redoc-cli
+      
+      - name: Generate Redoc HTML
+        run: redoc-cli bundle ./docs/openapi --output ./static/redoc.html
 
       - name: Install Dependencies
         run: npm ci
