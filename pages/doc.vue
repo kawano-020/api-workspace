@@ -1,6 +1,6 @@
 <template>
   <div v-if="state.nodeEnv === 'production'">
-  <iframe :src="`${$router.options.base}` + 'redoc.html'"></iframe>
+    <iframe :src="`${$router.options.base}` + 'redoc.html'" />
   </div>
   <div v-else>
     {{ 'Only Production.' }}
@@ -11,7 +11,7 @@
 import { defineComponent, onMounted, reactive } from '@nuxtjs/composition-api'
 
 export default defineComponent({
-  setup() {
+  setup () {
     const state = reactive({
       nodeEnv: ''
     })
@@ -19,12 +19,11 @@ export default defineComponent({
       state.nodeEnv = process.env.NODE_ENV!
     })
     return {
-      state,
+      state
     }
-  },
+  }
 })
 </script>
-
 
 <style lang="scss" scoped>
 iframe {

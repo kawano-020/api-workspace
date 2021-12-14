@@ -7,7 +7,7 @@ export default {
 
   router: {
     // https://nuxtjs.org/deployments/github-pages/
-    base: process.env.NODE_ENV === 'production' ? '/workspace/' : '',
+    base: process.env.NODE_ENV === 'production' ? '/workspace/' : ''
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -49,10 +49,10 @@ export default {
       '@nuxtjs/vuetify',
       {
         defaultAssets: {
-          font: false,
-        },
-      },
-    ],
+          font: false
+        }
+      }
+    ]
   ],
 
   // Vuetify module configuration
@@ -69,10 +69,10 @@ export default {
           info: colors.teal.lighten1,
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
-          success: colors.green.accent3,
-        },
-      },
-    },
+          success: colors.green.accent3
+        }
+      }
+    }
   },
 
   // Modules: https://go.nuxtjs.dev/config-modules

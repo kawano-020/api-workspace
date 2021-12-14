@@ -1,0 +1,10 @@
+root: true
+env:
+  es2020: true
+  browser: true
+plugins:
+  - '@typescript-eslint'
+extends:
+  - 'eslint:recommended'
+  - '@nuxtjs/eslint-config-typescript'
+  - 'plugin:nuxt/recommended'
