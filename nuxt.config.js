@@ -12,7 +12,8 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'workspace',
+    titleTemplate: '%s - WorkSpace',
+    title: 'WorkSpace',
     htmlAttrs: {
       lang: 'ja'
     },

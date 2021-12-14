@@ -1,4 +1,3 @@
-<!-- Please remove this file from your project -->
 <template>
   <div class="top-bar">
     <v-app-bar
@@ -7,7 +6,7 @@
       fixed
     >
       <v-app-bar-nav-icon @click="state.isSideMenuVisible = !state.isSideMenuVisible" />
-      <v-toolbar-title>WorkSpace</v-toolbar-title>
+      <v-toolbar-title>{{ 'WorkSpace' }}</v-toolbar-title>
     </v-app-bar>
 
     <v-navigation-drawer
@@ -37,7 +36,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, useRoute, useRouter } from '@nuxtjs/composition-api'
+import { defineComponent, reactive, useRouter } from '@nuxtjs/composition-api'
 
 type Route = {
   title: string
@@ -45,8 +44,8 @@ type Route = {
 }
 
 type State = {
-  currentRouteIndex: number | null
-  isSideMenuVisible: Boolean
+  currentRouteTitle: string
+  isSideMenuVisible: boolean
 }
 
 const routes: Route[] = [
@@ -56,23 +55,11 @@ const routes: Route[] = [
 
 export default defineComponent({
   setup () {
-    const route = useRoute()
     const router = useRouter()
     const state = reactive<State>({
-      currentRouteIndex: null,
+      currentRouteTitle: '',
       isSideMenuVisible: false
     })
-
-    onMounted(() => {
-      resolveCurrentRouteIndex()
-    })
-
-    const resolveCurrentRouteIndex = () => {
-      const currentRouteIndex = routes.findIndex((element) => {
-        return element.pathName === route.value.name
-      })
-      state.currentRouteIndex = currentRouteIndex
-    }
 
     const handleRoute = (route: Route) => {
       router.push({ name: route.pathName })
