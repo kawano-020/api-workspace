@@ -12,12 +12,6 @@ export default {
   router: {
     // https://nuxtjs.org/deployments/github-pages/
     base: process.env.NODE_ENV === 'prod' ? '/workspace/' : '',
-    extendRoutes (routes, resolve) {
-      routes.push({
-        path: '*',
-        component: resolve(__dirname, 'pages/errors/404.vue')
-      })
-    }
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head

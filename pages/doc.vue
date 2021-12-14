@@ -1,11 +1,10 @@
 <template>
-  <!-- <div v-if="state.nodeEnv === 'production'"> -->
-  <div>
-  <iframe src="/redoc.html"></iframe>
+  <div v-if="state.nodeEnv !== 'production'">
+  <iframe src="redoc.html"></iframe>
   </div>
-  <!-- <div v-else>
+  <div v-else>
     {{ 'Only Production.' }}
-  </div> -->
+  </div>
 </template>
 
 <script lang="ts">
