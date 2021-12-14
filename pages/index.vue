@@ -4,12 +4,6 @@
     <img
       src="https://github-readme-stats.vercel.app/api/pin/?username=kawano-020&repo=api-workspace&show_owner=true&show_icons=true"
     >
-    <v-btn
-      color="primary"
-      @click="$router.push({name: 'doc'})"
-    >
-      API Doc
-    </v-btn>
   </div>
 </template>
 
