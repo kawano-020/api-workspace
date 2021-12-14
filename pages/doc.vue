@@ -1,5 +1,4 @@
 <template>
-  <div>
   <div v-if="state.nodeEnv === 'production'">
   <iframe src="/redoc.html"></iframe>
   </div>
