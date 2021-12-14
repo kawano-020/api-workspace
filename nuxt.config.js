@@ -23,7 +23,13 @@ export default {
   },
 
   router: {
-    base: process.env.NODE_ENV === 'prod' ? '/workspace/' : ''
+    base: process.env.NODE_ENV === 'prod' ? '/workspace/' : '',
+    extendRoutes (routes, resolve) {
+      routes.push({
+        path: '*',
+        component: resolve(__dirname, 'pages/errors/404.vue')
+      })
+    }
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
