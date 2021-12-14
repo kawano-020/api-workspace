@@ -5,6 +5,10 @@ export default {
   ssr: false,
   target: 'static',
 
+  env: {
+    NODE_ENV: process.env.NODE_ENV
+  },
+
   router: {
     // https://nuxtjs.org/deployments/github-pages/
     base: process.env.NODE_ENV === 'prod' ? '/workspace/' : '',
