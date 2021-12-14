@@ -1,6 +1,6 @@
 <template>
-  <div v-if="state.nodeEnv !== 'production'">
-  <iframe src="redoc.html"></iframe>
+  <div v-if="state.nodeEnv === 'production'">
+  <iframe :src="`${$router.options.base}` + 'redoc.html'"></iframe>
   </div>
   <div v-else>
     {{ 'Only Production.' }}
@@ -19,7 +19,7 @@ export default defineComponent({
       state.nodeEnv = process.env.NODE_ENV!
     })
     return {
-      state
+      state,
     }
   },
 })
