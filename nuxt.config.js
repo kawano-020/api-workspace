@@ -3,7 +3,18 @@ import colors from 'vuetify/es5/util/colors'
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
-  target: 'server',
+  target: 'static',
+
+  router: {
+    // https://nuxtjs.org/deployments/github-pages/
+    base: process.env.NODE_ENV === 'prod' ? '/workspace/' : '',
+    extendRoutes (routes, resolve) {
+      routes.push({
+        path: '*',
+        component: resolve(__dirname, 'pages/errors/404.vue')
+      })
+    }
+  },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -20,16 +31,6 @@ export default {
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
-  },
-
-  router: {
-    base: process.env.NODE_ENV === 'prod' ? '/workspace/' : '',
-    extendRoutes (routes, resolve) {
-      routes.push({
-        path: '*',
-        component: resolve(__dirname, 'pages/errors/404.vue')
-      })
-    }
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
