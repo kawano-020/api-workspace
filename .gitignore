@@ -15,6 +15,3 @@ dist
 
 # Nodenv
 .node-version
-
-# OpenAPI
-static/redoc.html
