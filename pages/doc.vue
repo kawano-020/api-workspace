@@ -2,15 +2,19 @@
   <div v-if="state.nodeEnv === 'production'">
     <iframe :src="`${$router.options.base}` + 'redoc.html'" />
   </div>
-  <div v-else>
+  <BaseContainer v-else>
     {{ 'Only Production.' }}
-  </div>
+  </BaseContainer>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, reactive } from '@nuxtjs/composition-api'
+import BaseContainer from '@/components/BaseContainer.vue'
 
 export default defineComponent({
+  components: {
+    BaseContainer
+  },
   setup() {
     const state = reactive({
       nodeEnv: '',
