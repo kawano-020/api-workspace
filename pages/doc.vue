@@ -5,7 +5,7 @@
   />
   <BaseContainer v-else class="develop">
     <v-row class="caution" justify="center">
-      <v-icon left :size="50">mdi-alert-rhombus</v-icon>
+      <v-icon left :size="50">mdi-alert-rhombus-outline</v-icon>
       <h1>
         {{ 'Production Only.' }}
       </h1>
