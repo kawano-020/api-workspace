@@ -43,6 +43,7 @@ iframe {
   height: calc(100vh - 64px);
 }
 .develop {
+  padding: 24px;
   .caution {
     h1 {
       display: inline-block;

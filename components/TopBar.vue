@@ -4,7 +4,7 @@
       <v-app-bar-nav-icon
         @click="state.isSideMenuVisible = !state.isSideMenuVisible"
       />
-      <v-toolbar-title>{{ 'WorkSpace' }}</v-toolbar-title>
+      <v-toolbar-title>{{ pageTitle }}</v-toolbar-title>
       <v-spacer />
       <ThemeSwitcher @switch-theme="switchTheme" />
     </v-app-bar>
@@ -21,7 +21,7 @@
           active-class="indigo--text text--accent-4"
         >
           <v-list-item
-            v-for="route in routes"
+            v-for="route in validatedRoutes"
             :key="route.title"
             @click="handleRoute(route)"
           >
@@ -35,9 +35,11 @@
 
 <script lang="ts">
 import {
+  computed,
   defineComponent,
   reactive,
   useContext,
+  useRoute,
   useRouter,
 } from '@nuxtjs/composition-api'
 import ThemeSwitcher from '@/components/ThemeSwitcher.vue'
@@ -64,10 +66,29 @@ export default defineComponent({
   },
   setup() {
     const { $vuetify } = useContext()
+    const route = useRoute()
     const router = useRouter()
     const state = reactive<State>({
       currentRouteTitle: '',
       isSideMenuVisible: false,
+    })
+
+    const pageTitle = computed(() => {
+      const appName = 'WorkSpace'
+      const currentRouteDetail = routes.find((element) => {
+        return element.pathName === route.value.name
+      })
+      if (currentRouteDetail) {
+        return `${appName} - ${currentRouteDetail.title}`
+      } else {
+        return appName
+      }
+    })
+
+    const validatedRoutes = computed(() => {
+      return routes.filter((element) => {
+        return element.pathName !== route.value.name
+      })
     })
 
     const switchTheme = (isDrak: boolean): void => {
@@ -79,7 +100,8 @@ export default defineComponent({
     }
     return {
       state,
-      routes,
+      pageTitle,
+      validatedRoutes,
       switchTheme,
       handleRoute,
     }
