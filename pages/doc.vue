@@ -1,6 +1,6 @@
 <template>
   <iframe
-    v-if="state.nodeEnv !== 'production'"
+    v-if="state.nodeEnv === 'production'"
     :src="`${$router.options.base}` + 'redoc.html'"
   />
   <BaseContainer v-else>

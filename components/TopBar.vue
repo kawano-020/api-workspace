@@ -5,6 +5,8 @@
         @click="state.isSideMenuVisible = !state.isSideMenuVisible"
       />
       <v-toolbar-title>{{ 'WorkSpace' }}</v-toolbar-title>
+      <v-spacer />
+      <ThemeSwitcher @switch-theme="switchTheme" />
     </v-app-bar>
 
     <v-navigation-drawer
@@ -32,7 +34,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, useRouter } from '@nuxtjs/composition-api'
+import {
+  defineComponent,
+  reactive,
+  useContext,
+  useRouter,
+} from '@nuxtjs/composition-api'
+import ThemeSwitcher from '@/components/ThemeSwitcher.vue'
 
 type Route = {
   title: string
@@ -51,12 +59,20 @@ const routes: Route[] = [
 
 export default defineComponent({
   name: 'TopBar',
+  components: {
+    ThemeSwitcher,
+  },
   setup() {
+    const { $vuetify } = useContext()
     const router = useRouter()
     const state = reactive<State>({
       currentRouteTitle: '',
       isSideMenuVisible: false,
     })
+
+    const switchTheme = (isDrak: boolean): void => {
+      $vuetify.theme.dark = isDrak
+    }
 
     const handleRoute = (route: Route): void => {
       router.push({ name: route.pathName })
@@ -64,6 +80,7 @@ export default defineComponent({
     return {
       state,
       routes,
+      switchTheme,
       handleRoute,
     }
   },
