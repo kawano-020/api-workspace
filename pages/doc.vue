@@ -4,12 +4,12 @@
     :src="`${$router.options.base}` + 'redoc.html'"
   />
   <BaseContainer v-else class="develop">
-  <v-row class="caution" justify="center">
+    <v-row class="caution" justify="center">
       <v-icon left :size="50">mdi-alert-rhombus</v-icon>
       <h1>
         {{ 'Production Only.' }}
       </h1>
-  </v-row>
+    </v-row>
   </BaseContainer>
 </template>
 
