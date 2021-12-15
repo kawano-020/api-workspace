@@ -32,6 +32,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 iframe {
+  background: white;
   border: none;
   width: 100vw;
   height: calc(100vh - 64px);
