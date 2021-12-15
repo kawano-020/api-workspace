@@ -1,7 +1,8 @@
 <template>
-  <div v-if="state.nodeEnv === 'production'">
-    <iframe :src="`${$router.options.base}` + 'redoc.html'" />
-  </div>
+  <iframe
+    v-if="state.nodeEnv !== 'production'"
+    :src="`${$router.options.base}` + 'redoc.html'"
+  />
   <BaseContainer v-else>
     {{ 'Only Production.' }}
   </BaseContainer>
@@ -13,7 +14,7 @@ import BaseContainer from '@/components/BaseContainer.vue'
 
 export default defineComponent({
   components: {
-    BaseContainer
+    BaseContainer,
   },
   setup() {
     const state = reactive({
@@ -33,6 +34,6 @@ export default defineComponent({
 iframe {
   border: none;
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - 64px);
 }
 </style>
