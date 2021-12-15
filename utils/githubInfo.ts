@@ -9,6 +9,10 @@ export class GithubInfo {
   }
 
   get apiOrigin(): string {
-    return `https://api.github.com/users/${this.userName}/`
+    return `https://api.github.com/`
+  }
+
+  get apiBaseURL(): string {
+    return `${this.apiOrigin}users/${this.userName}/`
   }
 }

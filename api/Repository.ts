@@ -10,6 +10,6 @@ export class Repository {
   }
 
   list(): Promise<any> {
-    return this.axios.$get(`${githubInfo.apiOrigin}repos`)
+    return this.axios.$get(`${githubInfo.apiBaseURL}repos`)
   }
 }
