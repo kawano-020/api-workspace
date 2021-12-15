@@ -15,7 +15,7 @@ import BaseContainer from '@/components/BaseContainer.vue'
 export default defineComponent({
   components: {
     BaseContainer,
-    TopBar
-  }
+    TopBar,
+  },
 })
 </script>

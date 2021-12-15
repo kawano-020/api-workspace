@@ -11,17 +11,17 @@
 import { defineComponent, onMounted, reactive } from '@nuxtjs/composition-api'
 
 export default defineComponent({
-  setup () {
+  setup() {
     const state = reactive({
-      nodeEnv: ''
+      nodeEnv: '',
     })
     onMounted(() => {
       state.nodeEnv = process.env.NODE_ENV!
     })
     return {
-      state
+      state,
     }
-  }
+  },
 })
 </script>
 

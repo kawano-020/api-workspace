@@ -2,9 +2,16 @@ root: true
 env:
   es2020: true
   browser: true
+rules:
+  '@typescript-eslint/explicit-function-return-type': 'error'
+  max-len:
+    - error
+    - code: 80
+    - ignoreUrls: true
 plugins:
   - '@typescript-eslint'
 extends:
   - 'eslint:recommended'
   - '@nuxtjs/eslint-config-typescript'
   - 'plugin:nuxt/recommended'
+  - prettier

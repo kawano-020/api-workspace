@@ -1,11 +1,9 @@
 <template>
   <div class="top-bar">
-    <v-app-bar
-      color="indigo darken-2"
-      dark
-      fixed
-    >
-      <v-app-bar-nav-icon @click="state.isSideMenuVisible = !state.isSideMenuVisible" />
+    <v-app-bar color="indigo darken-2" dark fixed>
+      <v-app-bar-nav-icon
+        @click="state.isSideMenuVisible = !state.isSideMenuVisible"
+      />
       <v-toolbar-title>{{ 'WorkSpace' }}</v-toolbar-title>
     </v-app-bar>
 
@@ -15,9 +13,7 @@
       bottom
       temporary
     >
-      <v-list
-        nav
-      >
+      <v-list nav>
         <v-list-item-group
           v-model="state.currentRouteIndex"
           active-class="indigo--text text--accent-4"
@@ -50,27 +46,27 @@ type State = {
 
 const routes: Route[] = [
   { title: 'Home', pathName: 'index' },
-  { title: 'API Document', pathName: 'doc' }
+  { title: 'API Document', pathName: 'doc' },
 ]
 
 export default defineComponent({
   name: 'TopBar',
-  setup () {
+  setup() {
     const router = useRouter()
     const state = reactive<State>({
       currentRouteTitle: '',
-      isSideMenuVisible: false
+      isSideMenuVisible: false,
     })
 
-    const handleRoute = (route: Route) => {
+    const handleRoute = (route: Route): void => {
       router.push({ name: route.pathName })
     }
     return {
       state,
       routes,
-      handleRoute
+      handleRoute,
     }
-  }
+  },
 })
 </script>
 

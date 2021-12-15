@@ -7,7 +7,7 @@ export default {
 
   router: {
     // https://nuxtjs.org/deployments/github-pages/
-    base: process.env.NODE_ENV === 'production' ? '/workspace/' : ''
+    base: process.env.NODE_ENV === 'production' ? '/workspace/' : '',
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -15,26 +15,22 @@ export default {
     titleTemplate: '%s - WorkSpace',
     title: 'WorkSpace',
     htmlAttrs: {
-      lang: 'ja'
+      lang: 'ja',
     },
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '' },
-      { name: 'format-detection', content: 'telephone=no' }
+      { name: 'format-detection', content: 'telephone=no' },
     ],
-    link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [
-  ],
+  css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [
-  ],
+  plugins: [],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -50,10 +46,10 @@ export default {
       '@nuxtjs/vuetify',
       {
         defaultAssets: {
-          font: false
-        }
-      }
-    ]
+          font: false,
+        },
+      },
+    ],
   ],
 
   // Vuetify module configuration
@@ -70,17 +66,15 @@ export default {
           info: colors.teal.lighten1,
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
-          success: colors.green.accent3
-        }
-      }
-    }
+          success: colors.green.accent3,
+        },
+      },
+    },
   },
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [
-  ],
+  modules: [],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {
-  }
+  build: {},
 }
