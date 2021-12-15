@@ -8,12 +8,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent, onMounted, useContext } from '@nuxtjs/composition-api'
 import BaseContainer from '@/components/BaseContainer.vue'
 
 export default defineComponent({
   components: {
     BaseContainer,
+  },
+  setup() {
+    const { $repositories } = useContext()
+    onMounted(async () => {
+      const a = await $repositories.repository.list()
+      console.warn(a)
+    })
   },
 })
 </script>
