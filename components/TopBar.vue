@@ -54,6 +54,7 @@ const routes: Route[] = [
 ]
 
 export default defineComponent({
+  name: 'TopBar',
   setup () {
     const router = useRouter()
     const state = reactive<State>({
