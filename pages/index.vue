@@ -9,7 +9,7 @@
           <v-list-item-group>
             <v-divider />
             <div v-for="route in state.explanationRoutes" :key="route.title">
-              <v-list-item>
+              <v-list-item @click="$router.push({ name: route.pathName })">
                 <v-icon>mdi-file-document-outline</v-icon>
                 <v-list-item>
                   <v-list-item-content>
