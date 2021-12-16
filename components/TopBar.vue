@@ -43,21 +43,12 @@ import {
   useRouter,
 } from '@nuxtjs/composition-api'
 import ThemeSwitcher from '@/components/ThemeSwitcher.vue'
-
-type Route = {
-  title: string
-  pathName: string
-}
+import { routes, Route } from '@/lib/route'
 
 type State = {
   currentRouteTitle: string
   isSideMenuVisible: boolean
 }
-
-const routes: Route[] = [
-  { title: 'Home', pathName: 'index' },
-  { title: 'API Document', pathName: 'api-doc' },
-]
 
 export default defineComponent({
   name: 'TopBar',

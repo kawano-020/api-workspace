@@ -7,19 +7,19 @@
       <v-card outlined>
         <v-list>
           <div
-            v-for="(description, index) in descriptions"
-            :key="description.title"
+            v-for="(explanation, index) in routeExplanations"
+            :key="explanation.title"
           >
             <v-list-item>
               <v-icon>mdi-file-document-outline</v-icon>
               <v-list-item>
                 <v-list-item-content>
-                  <v-list-item-title v-text="description.title" />
-                  <v-list-item-subtitle v-text="description.content" />
+                  <v-list-item-title v-text="explanation.title" />
+                  <v-list-item-subtitle v-text="explanation.description" />
                 </v-list-item-content>
               </v-list-item>
             </v-list-item>
-            <v-divider v-if="index < descriptions.length - 1" />
+            <v-divider v-if="index < explanation.length - 1" />
           </div>
         </v-list>
       </v-card>
@@ -39,6 +39,7 @@ import {
 import BaseContainer from '@/components/BaseContainer.vue'
 import { UserResponse } from '~/api/User'
 import UserCard from '@/components/UserCard.vue'
+import { routeExplanations } from '@/lib/route'
 
 type State = {
   statImageTheme: string
@@ -46,27 +47,7 @@ type State = {
   userInfo: UserResponse | null
 }
 
-type Description = {
-  title: string
-  content: string
-}
-
 const sheetWidth = 550
-
-const descriptions: Description[] = [
-  {
-    title: 'Repositories',
-    content: '説明',
-  },
-  {
-    title: 'API Documents',
-    content: '説明',
-  },
-  {
-    title: 'DB Documents',
-    content: '説明',
-  },
-]
 
 export default defineComponent({
   components: {
@@ -119,7 +100,7 @@ export default defineComponent({
     return {
       state,
       sheetWidth,
-      descriptions,
+      routeExplanations,
       repoStatImageUrl,
       userStatImageUrl,
     }

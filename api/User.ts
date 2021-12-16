@@ -1,5 +1,5 @@
 import { NuxtAxiosInstance } from '@nuxtjs/axios'
-import { GithubInfo } from '@/utils/githubInfo'
+import { GithubInfo } from '@/lib/githubInfo'
 
 export type UserResponse = {
   login: string
