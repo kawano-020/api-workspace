@@ -14,6 +14,6 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .base-container {
-  width: 850px;
+  max-width: 850px;
 }
 </style>
