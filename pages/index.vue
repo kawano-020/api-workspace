@@ -2,8 +2,8 @@
   <BaseContainer class="container">
     <v-sheet class="pa-2" :elevation="3" :width="sheetWidth">
       <v-img class="mb-2" :max-width="sheetWidth" :src="repoStatImageUrl" />
-      <v-img class="mb-2" :max-width="sheetWidth" :src="userStatImageUrl" />
       <UserCard v-if="state.userInfo" class="mb-2" :user="state.userInfo" />
+      <v-img class="mb-2" :max-width="sheetWidth" :src="userStatImageUrl" />
       <v-card outlined>
         <v-list>
           <div
