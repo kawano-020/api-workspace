@@ -2,9 +2,9 @@
   <v-card
     class="user-card d-flex justify-space-around align-center"
     light
-    :max-width="450"
+    :max-width="500"
   >
-    <v-avatar color="indigo" :size="100">
+    <v-avatar color="gray" :size="150">
       <v-img :src="user.avatarUrl" />
     </v-avatar>
     <v-list>
@@ -30,13 +30,23 @@
         <v-icon>mdi-source-repository-multiple</v-icon>
         <v-subheader v-text="`${user.publicRepos} Repo(s)`" />
       </v-list-item>
+      <v-divider />
+      <!-- Registiation Date -->
+      <v-list-item>
+        <v-icon>mdi-account-edit</v-icon>
+        <v-subheader v-text="`${formatedCreatedAt}`" />
+      </v-list-item>
     </v-list>
   </v-card>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@nuxtjs/composition-api'
+import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
 import { UserResponse } from '@/api/User'
+
+type Props = {
+  user: UserResponse
+}
 
 export default defineComponent({
   name: 'UserCard',
@@ -45,6 +55,21 @@ export default defineComponent({
       type: Object as PropType<UserResponse>,
       required: true,
     },
+  },
+  setup(props: Props) {
+    const formatedCreatedAt = computed(() => {
+      const createdAt = new Date(props.user.createdAt)
+      const year = createdAt.getFullYear()
+      const month = createdAt.getMonth()
+      const date = createdAt.getDate()
+      const hour = createdAt.getHours()
+      const minute = createdAt.getMinutes()
+      return `${year}/${month}/${date} ${hour}:${minute}`
+    })
+
+    return {
+      formatedCreatedAt,
+    }
   },
 })
 </script>

@@ -1,6 +1,8 @@
 <template>
-  <BaseContainer>
-    <img
+  <BaseContainer class="container">
+    <v-img
+      class="mb-3"
+      :max-width="500"
       src="https://github-readme-stats.vercel.app/api/pin/?username=kawano-020&repo=api-workspace&show_owner=true&show_icons=true"
     />
     <UserCard v-if="state.userInfo" :user="state.userInfo" />
@@ -43,3 +45,11 @@ export default defineComponent({
   },
 })
 </script>
+
+<style lang="scss" scoped>
+.container {
+  * {
+    margin: 0 auto;
+  }
+}
+</style>
