@@ -21,6 +21,10 @@ const dbDocument: Route = {
   description: 'WebAPIの開発に使用するDB仕様書',
 }
 
-export const routes: Route[] = [home, apiDocument]
+export const routes: Route[] = [home, repository, apiDocument, dbDocument]
 
-export const routeExplanations: Route[] = [repository, apiDocument, dbDocument]
+export const getFilteredRoutes = (excludeRouteNames: string[]): Route[] => {
+  return routes.filter((element) => {
+    return !excludeRouteNames.includes(element.pathName)
+  })
+}

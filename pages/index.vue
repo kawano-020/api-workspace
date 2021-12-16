@@ -6,21 +6,21 @@
       <v-img class="mb-2" :max-width="sheetWidth" :src="userStatImageUrl" />
       <v-card outlined>
         <v-list>
-          <div
-            v-for="(explanation, index) in routeExplanations"
-            :key="explanation.title"
-          >
-            <v-list-item>
-              <v-icon>mdi-file-document-outline</v-icon>
+          <v-list-item-group>
+            <v-divider />
+            <div v-for="route in state.explanationRoutes" :key="route.title">
               <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title v-text="explanation.title" />
-                  <v-list-item-subtitle v-text="explanation.description" />
-                </v-list-item-content>
+                <v-icon>mdi-file-document-outline</v-icon>
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title v-text="route.title" />
+                    <v-list-item-subtitle v-text="route.description" />
+                  </v-list-item-content>
+                </v-list-item>
               </v-list-item>
-            </v-list-item>
-            <v-divider v-if="index < explanation.length - 1" />
-          </div>
+              <v-divider />
+            </div>
+          </v-list-item-group>
         </v-list>
       </v-card>
     </v-sheet>
@@ -34,17 +34,19 @@ import {
   onMounted,
   reactive,
   useContext,
+  useRoute,
   watch,
 } from '@nuxtjs/composition-api'
 import BaseContainer from '@/components/BaseContainer.vue'
 import { UserResponse } from '~/api/User'
 import UserCard from '@/components/UserCard.vue'
-import { routeExplanations } from '@/lib/route'
+import { getFilteredRoutes, Route } from '@/lib/route'
 import { GithubInfo } from '@/lib/githubInfo'
 
 type State = {
   statImageTheme: string
   statImageBackgroundColor: string
+  explanationRoutes: Route[]
   userInfo: UserResponse | null
 }
 
@@ -58,14 +60,17 @@ export default defineComponent({
   },
   setup() {
     const { $repositories, $vuetify } = useContext()
+    const route = useRoute()
     const state = reactive<State>({
       statImageTheme: '',
       statImageBackgroundColor: '',
+      explanationRoutes: [],
       userInfo: null,
     })
 
     onMounted(async () => {
       state.userInfo = await $repositories.user.retrieve()
+      state.explanationRoutes = getFilteredRoutes([route.value.name!])
     })
 
     watch(
@@ -102,7 +107,6 @@ export default defineComponent({
     return {
       state,
       sheetWidth,
-      routeExplanations,
       repoStatImageUrl,
       userStatImageUrl,
     }

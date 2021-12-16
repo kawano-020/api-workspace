@@ -43,7 +43,7 @@ import {
   useRouter,
 } from '@nuxtjs/composition-api'
 import ThemeSwitcher from '@/components/ThemeSwitcher.vue'
-import { routes, Route } from '@/lib/route'
+import { routes, Route, getFilteredRoutes } from '@/lib/route'
 
 type State = {
   currentRouteTitle: string
@@ -77,9 +77,8 @@ export default defineComponent({
     })
 
     const validatedRoutes = computed(() => {
-      return routes.filter((element) => {
-        return element.pathName !== route.value.name
-      })
+      const excludeRoute = route.value.name ? route.value.name : ''
+      return getFilteredRoutes([excludeRoute])
     })
 
     const switchTheme = (isDrak: boolean): void => {
