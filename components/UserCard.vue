@@ -9,8 +9,8 @@
         <v-icon>mdi-account-circle</v-icon>
         <v-list-item>
           <v-list-item-content>
-            <v-list-item-title class="text-h6" v-text="user.login" />
-            <v-list-item-subtitle v-text="user.name" />
+            <v-list-item-title class="text-h6" v-text="user.name" />
+            <v-list-item-subtitle v-text="user.login" />
           </v-list-item-content>
         </v-list-item>
       </v-list-item>
