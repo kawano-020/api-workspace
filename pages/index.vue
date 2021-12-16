@@ -1,7 +1,8 @@
 <template>
   <BaseContainer class="container">
     <v-sheet class="pa-2" :elevation="3" :width="sheetWidth">
-      <v-img class="mb-2" :width="sheetWidth" :src="repoStatImageUrl" />
+      <v-img class="mb-2" :max-width="sheetWidth" :src="repoStatImageUrl" />
+      <v-img class="mb-2" :max-width="sheetWidth" :src="userStatImageUrl" />
       <UserCard v-if="state.userInfo" class="mb-2" :user="state.userInfo" />
       <v-card outlined>
         <v-list>
@@ -79,14 +80,25 @@ export default defineComponent({
       state.userInfo = await $repositories.user.retrieve()
     })
 
+    const statImageTheme = computed(() => {
+      return $vuetify.theme.dark ? 'dark' : 'default_repocard'
+    })
+
     const repoStatImageUrl = computed(() => {
       const baseUrl =
         'https://github-readme-stats.vercel.app/api/pin/' +
         '?username=kawano-020&repo=api-workspace&show_owner=true' +
         '&show_icons=true'
+      return `${baseUrl}&theme=${statImageTheme.value}`
+    })
 
-      const theme = $vuetify.theme.dark ? 'dark' : 'default_repocard'
-      return `${baseUrl}&theme=${theme}`
+    const userStatImageUrl = computed(() => {
+      const baseUrl =
+        'https://github-readme-stats.vercel.app/api/top-langs/' +
+        '?username=kawano-020&repo=api-workspace&show_owner=true' +
+        '&layout=compact&show_icons=true'
+
+      return `${baseUrl}&theme=${statImageTheme.value}`
     })
 
     return {
@@ -94,6 +106,7 @@ export default defineComponent({
       sheetWidth,
       descriptions,
       repoStatImageUrl,
+      userStatImageUrl,
     }
   },
 })
