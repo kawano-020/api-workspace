@@ -68,16 +68,22 @@ export default defineComponent({
       userInfo: null,
     })
 
+    const switchStatImageState = (): void => {
+      const isDark = $vuetify.theme.dark
+      state.statImageTheme = isDark ? 'dark' : 'default_repocard'
+      state.statImageBackgroundColor = isDark ? '1e1e1e' : ''
+    }
+
     onMounted(async () => {
+      switchStatImageState()
       state.userInfo = await $repositories.user.retrieve()
       state.explanationRoutes = getFilteredRoutes([route.value.name!])
     })
 
     watch(
       () => $vuetify.theme.dark,
-      (isDark) => {
-        state.statImageTheme = isDark ? 'dark' : 'default_repocard'
-        state.statImageBackgroundColor = isDark ? '1e1e1e' : ''
+      () => {
+        switchStatImageState()
       }
     )
 
