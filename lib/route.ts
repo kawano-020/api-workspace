@@ -11,12 +11,12 @@ const repository: Route = {
   description: 'Public Repositoryの一覧・詳細',
 }
 const apiDocument: Route = {
-  title: 'API Documents',
+  title: 'API Document',
   pathName: 'api-doc',
   description: 'WebAPIの開発に使用するAPI仕様書',
 }
 const dbDocument: Route = {
-  title: 'DB Documents',
+  title: 'DB Document',
   pathName: 'db-doc',
   description: 'WebAPIの開発に使用するDB仕様書',
 }
