@@ -1,10 +1,6 @@
 <template>
-  <v-card
-    class="user-card d-flex justify-space-around align-center"
-    light
-    :max-width="500"
-  >
-    <v-avatar color="gray" :size="150">
+  <v-card class="d-flex justify-space-around align-center" outlined>
+    <v-avatar color="indigo" :size="150">
       <v-img :src="user.avatarUrl" />
     </v-avatar>
     <v-list>
