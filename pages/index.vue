@@ -40,6 +40,7 @@ import BaseContainer from '@/components/BaseContainer.vue'
 import { UserResponse } from '~/api/User'
 import UserCard from '@/components/UserCard.vue'
 import { routeExplanations } from '@/lib/route'
+import { GithubInfo } from '@/lib/githubInfo'
 
 type State = {
   statImageTheme: string
@@ -48,6 +49,7 @@ type State = {
 }
 
 const sheetWidth = 550
+const githubInfo = new GithubInfo()
 
 export default defineComponent({
   components: {
@@ -74,27 +76,27 @@ export default defineComponent({
       }
     )
 
-    const repoStatImageUrl = computed(() => {
+    const getStatImageUrl = (
+      section: string,
+      queryString: string = ''
+    ): string => {
       const baseUrl =
-        'https://github-readme-stats.vercel.app/api/pin/' +
-        '?username=kawano-020&repo=api-workspace&show_owner=true' +
+        `https://github-readme-stats.vercel.app/api/${section}/` +
+        `?username=${githubInfo.userName}` +
+        `&repo=${githubInfo.repositoryName}&show_owner=true` +
         '&show_icons=true'
       return (
-        `${baseUrl}&theme=${state.statImageTheme}` +
+        `${baseUrl}${queryString}&theme=${state.statImageTheme}` +
         `&bg_color=${state.statImageBackgroundColor}`
       )
+    }
+
+    const repoStatImageUrl = computed(() => {
+      return getStatImageUrl('pin')
     })
 
     const userStatImageUrl = computed(() => {
-      const baseUrl =
-        'https://github-readme-stats.vercel.app/api/top-langs/' +
-        '?username=kawano-020&repo=api-workspace&show_owner=true' +
-        '&layout=compact&show_icons=true'
-
-      return (
-        `${baseUrl}&theme=${state.statImageTheme}` +
-        `&bg_color=${state.statImageBackgroundColor}`
-      )
+      return getStatImageUrl('top-langs', '&layout=compact')
     })
 
     return {

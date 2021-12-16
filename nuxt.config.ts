@@ -1,4 +1,6 @@
 import colors from 'vuetify/es5/util/colors'
+import { GithubInfo } from './lib/githubInfo'
+const githubInfo = new GithubInfo()
 
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
@@ -7,7 +9,10 @@ export default {
 
   router: {
     // https://nuxtjs.org/deployments/github-pages/
-    base: process.env.NODE_ENV === 'production' ? '/workspace/' : '',
+    base:
+      process.env.NODE_ENV === 'production'
+        ? `/${githubInfo.repositoryName}/`
+        : '',
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head

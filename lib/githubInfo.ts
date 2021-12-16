@@ -8,6 +8,10 @@ export class GithubInfo {
     return this._userName
   }
 
+  get repositoryName(): string {
+    return 'workspace'
+  }
+
   get apiOrigin(): string {
     return `https://api.github.com/`
   }
