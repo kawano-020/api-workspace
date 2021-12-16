@@ -1,15 +1,9 @@
 <template>
   <BaseContainer>
-    <h1>{{ 'Welcome to WorkSpace' }}</h1>
     <img
       src="https://github-readme-stats.vercel.app/api/pin/?username=kawano-020&repo=api-workspace&show_owner=true&show_icons=true"
     />
-    <div v-if="state.userInfo">
-      <v-img width="300" :src="state.userInfo.avatarUrl" />
-      <h2>{{ `Name: ${state.userInfo.name}` }}</h2>
-      <h3>{{ `Registration date: ${new Date(state.userInfo.createdAt)}` }}</h3>
-      <h3>{{ `Location: ${state.userInfo.location}` }}</h3>
-    </div>
+    <UserCard v-if="state.userInfo" :user="state.userInfo" />
   </BaseContainer>
 </template>
 
@@ -22,6 +16,7 @@ import {
 } from '@nuxtjs/composition-api'
 import BaseContainer from '@/components/BaseContainer.vue'
 import { UserResponse } from '~/api/User'
+import UserCard from '@/components/UserCard.vue'
 
 type State = {
   userInfo: UserResponse | null
@@ -30,6 +25,7 @@ type State = {
 export default defineComponent({
   components: {
     BaseContainer,
+    UserCard,
   },
   setup() {
     const { $repositories } = useContext()

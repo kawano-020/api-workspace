@@ -56,7 +56,7 @@ type State = {
 
 const routes: Route[] = [
   { title: 'Home', pathName: 'index' },
-  { title: 'API Document', pathName: 'doc' },
+  { title: 'API Document', pathName: 'api-doc' },
 ]
 
 export default defineComponent({

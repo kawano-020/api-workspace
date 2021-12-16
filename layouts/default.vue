@@ -1,7 +1,5 @@
 <template>
-  <v-app
-    :style="isDark ? { background: backgroundColorWhenDark } : ''"
-  >
+  <v-app :style="isDark ? { background: backgroundColorWhenDark } : ''">
     <TopBar />
     <nuxt />
   </v-app>

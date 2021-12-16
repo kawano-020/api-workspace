@@ -6,6 +6,7 @@ export type UserResponse = {
   name: string
   avatarUrl: string
   location: string
+  publicRepos: number
   createdAt: string
 }
 
