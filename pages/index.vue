@@ -34,12 +34,15 @@ import {
   onMounted,
   reactive,
   useContext,
+  watch,
 } from '@nuxtjs/composition-api'
 import BaseContainer from '@/components/BaseContainer.vue'
 import { UserResponse } from '~/api/User'
 import UserCard from '@/components/UserCard.vue'
 
 type State = {
+  statImageTheme: string
+  statImageBackgroundColor: string
   userInfo: UserResponse | null
 }
 
@@ -73,6 +76,8 @@ export default defineComponent({
   setup() {
     const { $repositories, $vuetify } = useContext()
     const state = reactive<State>({
+      statImageTheme: '',
+      statImageBackgroundColor: '',
       userInfo: null,
     })
 
@@ -80,16 +85,23 @@ export default defineComponent({
       state.userInfo = await $repositories.user.retrieve()
     })
 
-    const statImageTheme = computed(() => {
-      return $vuetify.theme.dark ? 'dark' : 'default_repocard'
-    })
+    watch(
+      () => $vuetify.theme.dark,
+      (isDark) => {
+        state.statImageTheme = isDark ? 'dark' : 'default_repocard'
+        state.statImageBackgroundColor = isDark ? '1e1e1e' : ''
+      }
+    )
 
     const repoStatImageUrl = computed(() => {
       const baseUrl =
         'https://github-readme-stats.vercel.app/api/pin/' +
         '?username=kawano-020&repo=api-workspace&show_owner=true' +
         '&show_icons=true'
-      return `${baseUrl}&theme=${statImageTheme.value}`
+      return (
+        `${baseUrl}&theme=${state.statImageTheme}` +
+        `&bg_color=${state.statImageBackgroundColor}`
+      )
     })
 
     const userStatImageUrl = computed(() => {
@@ -98,7 +110,10 @@ export default defineComponent({
         '?username=kawano-020&repo=api-workspace&show_owner=true' +
         '&layout=compact&show_icons=true'
 
-      return `${baseUrl}&theme=${statImageTheme.value}`
+      return (
+        `${baseUrl}&theme=${state.statImageTheme}` +
+        `&bg_color=${state.statImageBackgroundColor}`
+      )
     })
 
     return {
