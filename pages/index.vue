@@ -40,7 +40,7 @@ import {
 import BaseContainer from '@/components/BaseContainer.vue'
 import { UserResponse } from '~/api/User'
 import UserCard from '@/components/UserCard.vue'
-import { getFilteredRoutes, Route } from '@/lib/route'
+import { Route } from '@/plugins/route'
 import { GithubInfo } from '@/lib/githubInfo'
 
 type State = {
@@ -59,7 +59,7 @@ export default defineComponent({
     UserCard,
   },
   setup() {
-    const { $repositories, $vuetify } = useContext()
+    const { $getFilteredRoutes, $repositories, $vuetify } = useContext()
     const route = useRoute()
     const state = reactive<State>({
       statImageTheme: '',
@@ -77,7 +77,7 @@ export default defineComponent({
     onMounted(async () => {
       switchStatImageState()
       state.userInfo = await $repositories.user.retrieve()
-      state.explanationRoutes = getFilteredRoutes([route.value.name!])
+      state.explanationRoutes = $getFilteredRoutes([route.value.name!])
     })
 
     watch(

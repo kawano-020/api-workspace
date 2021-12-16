@@ -1,3 +1,5 @@
+import { defineNuxtPlugin } from '@nuxtjs/composition-api'
+
 export type Route = {
   title: string
   pathName: string
@@ -23,8 +25,18 @@ const dbDocument: Route = {
 
 export const routes: Route[] = [home, repository, apiDocument, dbDocument]
 
-export const getFilteredRoutes = (excludeRouteNames: string[]): Route[] => {
+const getFilteredRoutes = (excludeRouteNames: string[]): Route[] => {
   return routes.filter((element) => {
     return !excludeRouteNames.includes(element.pathName)
   })
 }
+
+declare module '@nuxt/types' {
+  interface Context {
+    $getFilteredRoutes: (excludeRouteNames: string[]) => Route[]
+  }
+}
+
+export default defineNuxtPlugin((_, inject) => {
+  inject('getFilteredRoutes', getFilteredRoutes)
+})
