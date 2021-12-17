@@ -38,17 +38,17 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
-import { UserResponse } from '@/api/User'
+import { GithubUser } from '@/api/Github'
 
 type Props = {
-  user: UserResponse
+  user: GithubUser
 }
 
 export default defineComponent({
   name: 'UserCard',
   props: {
     user: {
-      type: Object as PropType<UserResponse>,
+      type: Object as PropType<GithubUser>,
       required: true,
     },
   },

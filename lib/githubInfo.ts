@@ -16,7 +16,11 @@ export class GithubInfo {
     return `https://api.github.com/`
   }
 
-  get apiBaseURL(): string {
+  get baseURL(): string {
     return `${this.apiOrigin}users/${this.userName}/`
+  }
+
+  get searchBaseURL(): string {
+    return `${this.apiOrigin}search/`
   }
 }

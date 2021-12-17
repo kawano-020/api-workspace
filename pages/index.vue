@@ -45,7 +45,7 @@ import {
   watch,
 } from '@nuxtjs/composition-api'
 import BaseContainer from '@/components/BaseContainer.vue'
-import { UserResponse } from '~/api/User'
+import { GithubUser } from '~/api/Github'
 import UserCard from '@/components/UserCard.vue'
 import { Route } from '@/plugins/route'
 
@@ -53,7 +53,7 @@ type State = {
   repoStatImageUrl: string
   topLangsStatImageUrl: string
   explanationRoutes: Route[]
-  userInfo: UserResponse | null
+  userInfo: GithubUser | null
 }
 
 const sheetWidth = 550

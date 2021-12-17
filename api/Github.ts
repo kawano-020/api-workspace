@@ -17,6 +17,10 @@ export type GithubRepository = {
   name: string
 }
 
+export type RepositoryResponse = {
+  items: GithubRepository[]
+}
+
 export class Github {
   private readonly axios: NuxtAxiosInstance
   constructor($axios: NuxtAxiosInstance) {
@@ -29,7 +33,20 @@ export class Github {
     )
   }
 
-  repositories(): Promise<GithubRepository[]> {
-    return this.axios.$get(`${githubInfo.apiBaseURL}repos`)
+  repositories(
+    containsName: string,
+    orderByUpdated: boolean
+  ): Promise<RepositoryResponse> {
+    const nameQuery = containsName ? `${containsName}+in:name` : ''
+    const userQuery = `user:${githubInfo.userName}`
+    const query = [nameQuery, userQuery]
+      .filter((element: string) => element)
+      .join('+')
+    const url = `${
+      githubInfo.searchBaseURL
+    }repositories?q=${query}&per_page=100${
+      orderByUpdated ? '&sort=updated' : ''
+    }`
+    return this.axios.$get(url)
   }
 }
