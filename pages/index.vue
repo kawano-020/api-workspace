@@ -45,7 +45,7 @@ import {
   watch,
 } from '@nuxtjs/composition-api'
 import BaseContainer from '@/components/BaseContainer.vue'
-import { GithubUser } from '~/api/Github'
+import { GithubUser } from '@/api/Github'
 import UserCard from '@/components/UserCard.vue'
 import { Route } from '@/plugins/route'
 

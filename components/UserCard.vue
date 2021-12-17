@@ -30,14 +30,19 @@
       <!-- Registiation Date -->
       <v-list-item>
         <v-icon>mdi-account-edit</v-icon>
-        <v-subheader v-text="`${formatedCreatedAt}`" />
+        <v-subheader v-text="`${createdAt}`" />
       </v-list-item>
     </v-list>
   </v-card>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from '@nuxtjs/composition-api'
+import {
+  computed,
+  defineComponent,
+  PropType,
+  useContext,
+} from '@nuxtjs/composition-api'
 import { GithubUser } from '@/api/Github'
 
 type Props = {
@@ -53,18 +58,13 @@ export default defineComponent({
     },
   },
   setup(props: Props) {
-    const formatedCreatedAt = computed(() => {
-      const createdAt = new Date(props.user.createdAt)
-      const year = createdAt.getFullYear()
-      const month = createdAt.getMonth()
-      const date = createdAt.getDate()
-      const hour = createdAt.getHours()
-      const minute = createdAt.getMinutes()
-      return `${year}/${month}/${date} ${hour}:${minute}`
+    const { $formatedIsoDateString } = useContext()
+    const createdAt = computed(() => {
+      return $formatedIsoDateString(props.user.createdAt)
     })
 
     return {
-      formatedCreatedAt,
+      createdAt,
     }
   },
 })

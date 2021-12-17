@@ -13,7 +13,7 @@ const getStatImageUrl = (
     `https://github-readme-stats.vercel.app/api/${section}/` +
     `?username=${githubInfo.userName}` +
     `&repo=${repositoryName}&show_owner=true` +
-    '&show_icons=true'
+    '&show_icons=true&langs_count=10'
   const theme = isDark ? 'dark' : 'default_repocard'
   const backgroundColor = isDark ? '1e1e1e' : ''
   return (

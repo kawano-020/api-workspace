@@ -42,6 +42,7 @@ export default {
     '@/plugins/repositories',
     '@/plugins/route',
     '@/plugins/stat-image',
+    '@/plugins/utils',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

@@ -15,10 +15,28 @@ export type GithubUser = {
 export type GithubRepository = {
   id: string
   name: string
+  description: string | null
+  createdAt: string
+  pushedAt: string
 }
 
-export type RepositoryResponse = {
+export type GithubCommitter = {
+  name: string
+  date: string
+}
+
+export type GithubCommit = {
+  committer: GithubUser
+  message: string
+}
+
+export type RepositoriesResponse = {
   items: GithubRepository[]
+}
+
+export type CommitsResponse = {
+  sha: string
+  commit: GithubCommit
 }
 
 export class Github {
@@ -36,7 +54,7 @@ export class Github {
   repositories(
     containsName: string,
     orderByUpdated: boolean
-  ): Promise<RepositoryResponse> {
+  ): Promise<RepositoriesResponse> {
     const nameQuery = containsName ? `${containsName}+in:name` : ''
     const userQuery = `user:${githubInfo.userName}`
     const query = [nameQuery, userQuery]
@@ -48,5 +66,20 @@ export class Github {
       orderByUpdated ? '&sort=updated' : ''
     }`
     return this.axios.$get(url)
+  }
+
+  repository(repositoryName: string): Promise<RepositoriesResponse> {
+    return this.axios.$get(
+      `${githubInfo.searchBaseURL}repositories` +
+        `?q=${repositoryName}+in:name+user:${githubInfo.userName}`
+    )
+  }
+
+  recentCommits(repositoryName: string): Promise<CommitsResponse[]> {
+    return this.axios.$get(
+      `${githubInfo.apiOrigin}repos/${githubInfo.userName}/` +
+        `${repositoryName}/commits`,
+      { params: { per_page: 10 } }
+    )
   }
 }

@@ -1,13 +1,15 @@
 <template>
   <BaseContainer>
     <v-sheet :elevation="3" class="pa-2">
-      <v-form class="mt-5 d-flex">
+      <!-- Search Form -->
+      <v-form class="mt-3 mb-5 d-flex align-center">
         <v-text-field
           v-model="state.search.name"
           class="mx-2"
           label="Repository Name"
           prepend-inner-icon="mdi-magnify"
           outlined
+          hide-details
           @input="watchSearchInput"
         ></v-text-field>
         <v-checkbox
@@ -20,19 +22,23 @@
       </v-form>
       <v-divider />
       <v-progress-linear :active="state.isFetching" :height="5" indeterminate />
+      <!-- Repositories -->
       <div
         class="mt-6 d-flex flex-wrap justify-space-around align-center"
         :class="state.repos.length % 2 !== 0 ? 'odd' : ''"
       >
         <p v-for="repo in state.repos" :key="repo.id">
           <v-img
+            class="repository"
             contain
             :max-width="370"
             :max-height="130"
             :src="$getRepoStatImageUrl(isDark, '', repo.name)"
+            @click="$router.push(`/repositories/${repo.name}`)"
           />
         </p>
       </div>
+      <!-- Exception Message -->
       <div v-if="state.errorMessage" class="mb-4 d-flex justify-center">
         <v-icon :size="50" left>mdi-alert-rhombus-outline</v-icon>
         <h1>
@@ -51,7 +57,7 @@ import {
   reactive,
   useContext,
 } from '@nuxtjs/composition-api'
-import { GithubRepository } from '~/api/Github'
+import { GithubRepository } from '@/api/Github'
 
 type State = {
   repos: GithubRepository[]
@@ -110,8 +116,8 @@ export default defineComponent({
       state.isFetching = false
     }
 
-    onMounted(() => {
-      fetchRepositories()
+    onMounted(async () => {
+      await fetchRepositories()
     })
 
     const isDark = computed(() => {
@@ -128,6 +134,14 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.repository {
+  cursor: pointer;
+  border-radius: 5px;
+  transition: 0.1s;
+  &:hover {
+    box-shadow: 0px 1px 8px 0px rgb(0 0 0 / 14%);
+  }
+}
 .odd::after {
   display: block;
   content: '';
