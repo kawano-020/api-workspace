@@ -1,44 +1,47 @@
 <template>
   <BaseContainer>
     <v-sheet class="pa-4" :elevation="3">
-      <!-- Repository Detail -->
-      <div
-        v-if="state.repo"
-        class="mb-4 d-flex justify-space-around align-center"
-      >
-        <p><v-img :src="repoStatImageUrl" /></p>
-        <RepositoryDetail :repo="state.repo" />
-      </div>
-      <v-divider />
-      <v-card class="mt-4" outlined>
-        <!-- Recent Commits -->
-        <div class="d-flex justify-center">
-          <v-icon large>mdi-source-commit-start</v-icon>
-          <div>
-            <v-card-title v-text="'Recent Commit(s)'" />
-            <v-card-subtitle v-text="'Show latest 10 commit(s).'" />
-          </div>
+      <div v-if="state.repo">
+        <!-- Repository Detail -->
+        <div class="mb-4 d-flex justify-space-around align-center">
+          <p><v-img :src="repoStatImageUrl" /></p>
+          <RepositoryDetail :repo="state.repo" />
         </div>
         <v-divider />
-        <v-list>
-          <!-- Commit -->
-          <div v-for="(commit, index) in state.recentCommits" :key="commit.id">
-            <v-list-item>
-              <v-icon large>mdi-source-commit</v-icon>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title v-text="commit.message" />
-                </v-list-item-content>
-                <v-subheader v-text="commit.committer.name" />
-                <v-subheader
-                  v-text="$formatedIsoDateString(commit.committer.date)"
-                />
-              </v-list-item>
-            </v-list-item>
-            <v-divider v-if="index < state.recentCommits.length - 1" />
+        <v-card class="mt-4" outlined>
+          <!-- Recent Commits -->
+          <div class="d-flex justify-center">
+            <v-icon large>mdi-source-commit-start</v-icon>
+            <div>
+              <v-card-title v-text="'Recent Commit(s)'" />
+              <v-card-subtitle v-text="'Show latest 10 commit(s).'" />
+            </div>
           </div>
-        </v-list>
-      </v-card>
+          <v-divider />
+          <v-list>
+            <!-- Commit -->
+            <div
+              v-for="(commit, index) in state.recentCommits"
+              :key="commit.id"
+            >
+              <v-list-item>
+                <v-icon large>mdi-source-commit</v-icon>
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title v-text="commit.message" />
+                  </v-list-item-content>
+                  <v-subheader v-text="commit.committer.name" />
+                  <v-subheader
+                    v-text="$formatedIsoDateString(commit.committer.date)"
+                  />
+                </v-list-item>
+              </v-list-item>
+              <v-divider v-if="index < state.recentCommits.length - 1" />
+            </div>
+          </v-list>
+        </v-card>
+      </div>
+      <ErrorMessage :error-message="state.errorMessage" />
     </v-sheet>
   </BaseContainer>
 </template>
@@ -54,6 +57,7 @@ import {
 import { CommitsResponse, GithubCommit, GithubRepository } from '@/api/Github'
 import BaseContainer from '@/components/BaseContainer.vue'
 import RepositoryDetail from '@/components/RepositoryDetail.vue'
+import ErrorMessage from '@/components/ErrorMessage.vue'
 
 type GithubCommitWithSha = GithubCommit & {
   sha: string
@@ -62,11 +66,13 @@ type GithubCommitWithSha = GithubCommit & {
 type State = {
   repo: GithubRepository | null
   recentCommits: GithubCommitWithSha[]
+  errorMessage: string
 }
 
 export default defineComponent({
   components: {
     BaseContainer,
+    ErrorMessage,
     RepositoryDetail,
   },
   setup() {
@@ -76,13 +82,18 @@ export default defineComponent({
     const state = reactive<State>({
       repo: null,
       recentCommits: [],
+      errorMessage: '',
     })
 
     const fetchRepository = async (): Promise<void> => {
-      const response = await $repositories.github.repository(repoName)
-      state.repo = response.items.find((element: GithubRepository) => {
-        return element.name === repoName
-      })!
+      try {
+        const response = await $repositories.github.repository(repoName)
+        state.repo = response.items.find((element: GithubRepository) => {
+          return element.name === repoName
+        })!
+      } catch {
+        state.errorMessage = 'Failed to fetch Repository.'
+      }
     }
 
     const fetchRecentCommits = async (): Promise<void> => {

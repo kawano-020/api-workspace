@@ -10,16 +10,19 @@
       </v-list-item>
       <v-divider />
       <!-- Description -->
-      <v-list-item v-if="repo.description">
-        <v-icon>mdi-information-variant</v-icon>
-        <v-subheader v-text="repo.description" />
-      </v-list-item>
-      <v-divider />
+      <div v-if="repo.description">
+        <v-list-item>
+          <v-icon>mdi-information-variant</v-icon>
+          <v-subheader v-text="repo.description" />
+        </v-list-item>
+        <v-divider />
+      </div>
       <!-- Pushed At -->
       <v-list-item>
         <v-icon>mdi-update</v-icon>
         <v-subheader v-text="`${pushedAt}`" />
       </v-list-item>
+      <v-divider />
       <!-- Created At -->
       <v-list-item>
         <v-icon>mdi-clock-time-four-outline</v-icon>

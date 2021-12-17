@@ -38,13 +38,7 @@
           />
         </p>
       </div>
-      <!-- Exception Message -->
-      <div v-if="state.errorMessage" class="mb-4 d-flex justify-center">
-        <v-icon :size="50" left>mdi-alert-rhombus-outline</v-icon>
-        <h1>
-          {{ state.errorMessage }}
-        </h1>
-      </div>
+      <ErrorMessage class="mb-4" :error-message="state.errorMessage" />
     </v-sheet>
   </BaseContainer>
 </template>
@@ -58,6 +52,7 @@ import {
   useContext,
 } from '@nuxtjs/composition-api'
 import { GithubRepository } from '@/api/Github'
+import ErrorMessage from '@/components/ErrorMessage.vue'
 
 type State = {
   repos: GithubRepository[]
@@ -71,6 +66,9 @@ type State = {
 }
 
 export default defineComponent({
+  components: {
+    ErrorMessage,
+  },
   setup() {
     const { $repositories, $vuetify } = useContext()
     const state = reactive<State>({
@@ -111,7 +109,7 @@ export default defineComponent({
         }
       } catch {
         state.repos = []
-        state.errorMessage = 'Failed to get Repositories.'
+        state.errorMessage = 'Failed to fetch Repositories.'
       }
       state.isFetching = false
     }
