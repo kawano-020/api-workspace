@@ -7,7 +7,7 @@ const zeroPadding = (value: number): string => {
 const formatedIsoDateString = (isoDateString: string): string => {
   const dateObj = new Date(isoDateString)
   const year = dateObj.getFullYear()
-  const month = zeroPadding(dateObj.getMonth())
+  const month = zeroPadding(dateObj.getMonth() + 1)
   const date = zeroPadding(dateObj.getDate())
   const hour = zeroPadding(dateObj.getHours())
   const minute = zeroPadding(dateObj.getMinutes())
