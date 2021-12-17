@@ -1,9 +1,17 @@
 <template>
   <BaseContainer class="container">
     <v-sheet class="pa-2" :elevation="3" :width="sheetWidth">
-      <v-img class="mb-2" :max-width="sheetWidth" :src="repoStatImageUrl" />
+      <v-img
+        class="mb-2"
+        :max-width="sheetWidth"
+        :src="state.repoStatImageUrl"
+      />
       <UserCard v-if="state.userInfo" class="mb-2" :user="state.userInfo" />
-      <v-img class="mb-2" :max-width="sheetWidth" :src="userStatImageUrl" />
+      <v-img
+        class="mb-2"
+        :max-width="sheetWidth"
+        :src="state.topLangsStatImageUrl"
+      />
       <v-card outlined>
         <v-list>
           <v-list-item-group>
@@ -29,7 +37,6 @@
 
 <script lang="ts">
 import {
-  computed,
   defineComponent,
   onMounted,
   reactive,
@@ -41,17 +48,15 @@ import BaseContainer from '@/components/BaseContainer.vue'
 import { UserResponse } from '~/api/User'
 import UserCard from '@/components/UserCard.vue'
 import { Route } from '@/plugins/route'
-import { GithubInfo } from '@/lib/githubInfo'
 
 type State = {
-  statImageTheme: string
-  statImageBackgroundColor: string
+  repoStatImageUrl: string
+  topLangsStatImageUrl: string
   explanationRoutes: Route[]
   userInfo: UserResponse | null
 }
 
 const sheetWidth = 550
-const githubInfo = new GithubInfo()
 
 export default defineComponent({
   components: {
@@ -59,62 +64,45 @@ export default defineComponent({
     UserCard,
   },
   setup() {
-    const { $getFilteredRoutes, $repositories, $vuetify } = useContext()
+    const {
+      $getFilteredRoutes,
+      $getRepoStatImageUrl,
+      $getTopLangsStatImageUrl,
+      $repositories,
+      $vuetify,
+    } = useContext()
     const route = useRoute()
     const state = reactive<State>({
-      statImageTheme: '',
-      statImageBackgroundColor: '',
+      repoStatImageUrl: '',
+      topLangsStatImageUrl: '',
       explanationRoutes: [],
       userInfo: null,
     })
 
-    const switchStatImageState = (): void => {
-      const isDark = $vuetify.theme.dark
-      state.statImageTheme = isDark ? 'dark' : 'default_repocard'
-      state.statImageBackgroundColor = isDark ? '1e1e1e' : ''
+    const setStatImageUrls = (isDark: boolean): void => {
+      state.repoStatImageUrl = $getRepoStatImageUrl(isDark)
+      state.topLangsStatImageUrl = $getTopLangsStatImageUrl(
+        isDark,
+        '&layout=compact'
+      )
     }
 
     onMounted(async () => {
-      switchStatImageState()
+      setStatImageUrls($vuetify.theme.dark)
       state.userInfo = await $repositories.user.retrieve()
       state.explanationRoutes = $getFilteredRoutes([route.value.name!])
     })
 
     watch(
       () => $vuetify.theme.dark,
-      () => {
-        switchStatImageState()
+      (isDark) => {
+        setStatImageUrls(isDark)
       }
     )
-
-    const getStatImageUrl = (
-      section: string,
-      queryString: string = ''
-    ): string => {
-      const baseUrl =
-        `https://github-readme-stats.vercel.app/api/${section}/` +
-        `?username=${githubInfo.userName}` +
-        `&repo=${githubInfo.repositoryName}&show_owner=true` +
-        '&show_icons=true'
-      return (
-        `${baseUrl}${queryString}&theme=${state.statImageTheme}` +
-        `&bg_color=${state.statImageBackgroundColor}`
-      )
-    }
-
-    const repoStatImageUrl = computed(() => {
-      return getStatImageUrl('pin')
-    })
-
-    const userStatImageUrl = computed(() => {
-      return getStatImageUrl('top-langs', '&layout=compact')
-    })
 
     return {
       state,
       sheetWidth,
-      repoStatImageUrl,
-      userStatImageUrl,
     }
   },
 })
