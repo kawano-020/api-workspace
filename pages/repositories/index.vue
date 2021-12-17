@@ -5,7 +5,7 @@
       <v-form class="mt-3 mb-5 d-flex align-center">
         <v-text-field
           v-model="state.search.name"
-          class="mx-2"
+          class="mx-4"
           label="Repository Name"
           prepend-inner-icon="mdi-magnify"
           outlined
@@ -14,7 +14,7 @@
         ></v-text-field>
         <v-checkbox
           v-model="state.search.orderByUpdated"
-          class="mx-2"
+          class="mx-4"
           label="Last Updated"
           append-icon="mdi-sort-clock-ascending-outline"
           @change="watchSearchInput"
