@@ -6,12 +6,13 @@ const githubInfo = new GithubInfo()
 const getStatImageUrl = (
   section: string,
   isDark: boolean,
-  queryString: string = ''
+  queryString: string,
+  repositoryName: string
 ): string => {
   const baseUrl =
     `https://github-readme-stats.vercel.app/api/${section}/` +
     `?username=${githubInfo.userName}` +
-    `&repo=${githubInfo.repositoryName}&show_owner=true` +
+    `&repo=${repositoryName}&show_owner=true` +
     '&show_icons=true'
   const theme = isDark ? 'dark' : 'default_repocard'
   const backgroundColor = isDark ? '1e1e1e' : ''
@@ -22,21 +23,31 @@ const getStatImageUrl = (
 
 const getRepoStatImageUrl = (
   isDark: boolean,
-  queryString: string = ''
+  queryString: string = '',
+  repositoryName: string = githubInfo.repositoryName
 ): string => {
-  return getStatImageUrl('pin', isDark, queryString)
+  return getStatImageUrl('pin', isDark, queryString, repositoryName)
 }
 
 const getTopLangsStatImageUrl = (
   isDark: boolean,
   queryString: string = ''
 ): string => {
-  return getStatImageUrl('top-langs', isDark, queryString)
+  return getStatImageUrl(
+    'top-langs',
+    isDark,
+    queryString,
+    githubInfo.repositoryName
+  )
 }
 
 declare module '@nuxt/types' {
   interface Context {
-    $getRepoStatImageUrl: (isDark: boolean, queryString?: string) => string
+    $getRepoStatImageUrl: (
+      isDark: boolean,
+      queryString?: string,
+      repositoryName?: string
+    ) => string
     $getTopLangsStatImageUrl: (isDark: boolean, queryString?: string) => string
   }
 }

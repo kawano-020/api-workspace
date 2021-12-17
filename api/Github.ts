@@ -12,6 +12,11 @@ export type GithubUser = {
   createdAt: string
 }
 
+export type GithubRepository = {
+  id: string
+  name: string
+}
+
 export class Github {
   private readonly axios: NuxtAxiosInstance
   constructor($axios: NuxtAxiosInstance) {
@@ -24,9 +29,7 @@ export class Github {
     )
   }
 
-  repositories(): Promise<any> {
-    return this.axios.$get(
-      `${githubInfo.apiBaseURL}users/${githubInfo.userName}/repos`
-    )
+  repositories(): Promise<GithubRepository[]> {
+    return this.axios.$get(`${githubInfo.apiBaseURL}repos`)
   }
 }
