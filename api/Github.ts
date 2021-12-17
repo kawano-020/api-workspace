@@ -75,6 +75,13 @@ export class Github {
     )
   }
 
+  repositoryLanguages(repositoryName: string): Promise<any> {
+    return this.axios.$get(
+      `${githubInfo.apiOrigin}repos/${githubInfo.userName}/` +
+        `${repositoryName}/languages`
+    )
+  }
+
   recentCommits(repositoryName: string): Promise<CommitsResponse[]> {
     return this.axios.$get(
       `${githubInfo.apiOrigin}repos/${githubInfo.userName}/` +

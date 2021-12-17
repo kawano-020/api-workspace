@@ -9,6 +9,45 @@
         </div>
         <v-divider />
         <v-card class="mt-4" outlined>
+          <!-- Languages -->
+          <div class="d-flex justify-center">
+            <v-icon large>mdi-file-code-outline</v-icon>
+            <v-card-title v-text="'Language(s)'" />
+          </div>
+          <v-divider />
+          <v-list>
+            <!-- Language Detail -->
+            <div
+              v-for="(language, index) in state.languages"
+              :key="language.name"
+            >
+              <v-list-item>
+                <v-icon
+                  large
+                  v-text="
+                    languageThemes[language.name]
+                      ? languageThemes[language.name].icon
+                      : 'mdi-code-tags'
+                  "
+                />
+                <v-list-item>
+                  <v-list-item-title v-text="language.name" />
+                  <v-subheader v-text="language.percentageString" />
+                  <v-progress-linear
+                    :value="language.percentage"
+                    :color="
+                      languageThemes[language.name]
+                        ? languageThemes[language.name].color
+                        : 'indigo darken-1'
+                    "
+                    :height="8"
+                  />
+                </v-list-item>
+              </v-list-item>
+              <v-divider v-if="index < state.languages.length - 1" />
+            </div>
+          </v-list>
+          <v-divider />
           <!-- Recent Commits -->
           <div class="d-flex justify-center">
             <v-icon large>mdi-source-commit-start</v-icon>
@@ -58,6 +97,7 @@ import { CommitsResponse, GithubCommit, GithubRepository } from '@/api/Github'
 import BaseContainer from '@/components/BaseContainer.vue'
 import RepositoryDetail from '@/components/RepositoryDetail.vue'
 import ErrorMessage from '@/components/ErrorMessage.vue'
+import { languageThemes } from '@/lib/languageIcon'
 
 type GithubCommitWithSha = GithubCommit & {
   sha: string
@@ -65,6 +105,11 @@ type GithubCommitWithSha = GithubCommit & {
 
 type State = {
   repo: GithubRepository | null
+  languages: {
+    name: string
+    percentage: number
+    percentageString: string
+  }[]
   recentCommits: GithubCommitWithSha[]
   errorMessage: string
 }
@@ -81,6 +126,7 @@ export default defineComponent({
     const repoName = route.value.params.repositoryName
     const state = reactive<State>({
       repo: null,
+      languages: [],
       recentCommits: [],
       errorMessage: '',
     })
@@ -94,6 +140,29 @@ export default defineComponent({
       } catch {
         state.errorMessage = 'Failed to fetch Repository.'
       }
+    }
+
+    const fetchLanguages = async (): Promise<void> => {
+      const response = await $repositories.github.repositoryLanguages(repoName)
+
+      const values: number[] = Object.values(response)
+      const totalBytes = values.reduce((sum, element) => {
+        return sum + element
+      }, 0)
+
+      const formatedLanguages = []
+
+      for (const language in response) {
+        const percentage = (response[language] / totalBytes) * 100
+        const langName = `${language[0].toUpperCase()}${language.slice(1)}`
+        formatedLanguages.push({
+          name: langName,
+          percentage,
+          percentageString: `${percentage.toFixed(1)}%`,
+        })
+      }
+
+      state.languages = formatedLanguages
     }
 
     const fetchRecentCommits = async (): Promise<void> => {
@@ -110,11 +179,13 @@ export default defineComponent({
 
     onMounted(async () => {
       await fetchRepository()
+      await fetchLanguages()
       await fetchRecentCommits()
     })
 
     return {
       state,
+      languageThemes,
       repoStatImageUrl,
     }
   },
