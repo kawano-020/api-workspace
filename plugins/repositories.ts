@@ -1,10 +1,8 @@
 import { defineNuxtPlugin } from '@nuxtjs/composition-api'
-import { Repository } from '@/api/Repository'
-import { User } from '@/api/User'
+import { Github } from '@/api/Github'
 
 interface Repositories {
-  repository: Repository
-  user: User
+  github: Github
 }
 
 declare module '@nuxt/types' {
@@ -14,11 +12,9 @@ declare module '@nuxt/types' {
 }
 
 export default defineNuxtPlugin(({ $axios }, inject) => {
-  const repository = new Repository($axios)
-  const user = new User($axios)
+  const github = new Github($axios)
   const $repositories = {
-    repository,
-    user,
+    github,
   }
   inject('repositories', $repositories)
 })

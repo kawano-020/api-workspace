@@ -89,7 +89,7 @@ export default defineComponent({
 
     onMounted(async () => {
       setStatImageUrls($vuetify.theme.dark)
-      state.userInfo = await $repositories.user.retrieve()
+      state.userInfo = await $repositories.github.user()
       state.explanationRoutes = $getFilteredRoutes([route.value.name!])
     })
 
