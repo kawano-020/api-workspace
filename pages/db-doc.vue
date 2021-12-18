@@ -1,8 +1,6 @@
 <template>
-  <BaseContainer>
-    <!-- eslint-disable-next-line vue/no-v-html -->
-    <v-sheet class="db-document pa-2" :elevation="3" v-html="dbDoc" />
-  </BaseContainer>
+  <!-- eslint-disable-next-line vue/no-v-html -->
+  <v-sheet class="db-document pa-4 mx-4" :elevation="3" v-html="dbDoc" />
 </template>
 
 <script lang="ts">
