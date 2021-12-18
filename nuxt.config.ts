@@ -1,6 +1,7 @@
 import colors from 'vuetify/es5/util/colors'
 import { GithubInfo } from './lib/githubInfo'
 const githubInfo = new GithubInfo()
+const faviconName = 'favicon.ico'
 
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
@@ -27,7 +28,16 @@ export default {
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    link: [
+      {
+        rel: 'icon',
+        type: 'image/x-icon',
+        href:
+          process.env.NODE_ENV === 'production'
+            ? `/${githubInfo.repositoryName}/${faviconName}`
+            : `/${faviconName}`,
+      },
+    ],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
