@@ -21,8 +21,8 @@
               :max-height="350"
               v-html="$md.render(state.readme)"
             />
+            <v-divider />
           </div>
-          <v-divider />
           <!-- Languages -->
           <div class="d-flex justify-center">
             <v-icon large>mdi-file-code-outline</v-icon>
