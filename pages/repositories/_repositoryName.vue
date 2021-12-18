@@ -189,9 +189,11 @@ export default defineComponent({
     }
 
     const fetchReadMe = async (): Promise<void> => {
-      const response = await $repositories.github.readme(repoName)
-      const readme = decodeURIComponent(escape(window.atob(response.content)))
-      state.readme = readme
+      try {
+        const response = await $repositories.github.readme(repoName)
+        const readme = decodeURIComponent(escape(window.atob(response.content)))
+        state.readme = readme
+      } catch {}
     }
 
     const repoStatImageUrl = computed(() => {
