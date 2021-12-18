@@ -12,7 +12,7 @@
           <!-- Readme -->
           <div v-if="state.readme">
             <div class="d-flex justify-center">
-              <v-icon large>mdi-file-code-outline</v-icon>
+              <v-icon large>mdi-text-box-outline</v-icon>
               <v-card-title v-text="'README.md'" />
             </div>
             <v-divider />
