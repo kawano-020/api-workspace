@@ -9,6 +9,20 @@
         </div>
         <v-divider />
         <v-card class="mt-4" outlined>
+          <!-- Readme -->
+          <div v-if="state.readme">
+            <div class="d-flex justify-center">
+              <v-icon large>mdi-file-code-outline</v-icon>
+              <v-card-title v-text="'README.md'" />
+            </div>
+            <v-divider />
+            <v-sheet
+              class="readme pa-4"
+              :max-height="350"
+              v-html="$md.render(state.readme)"
+            />
+          </div>
+          <v-divider />
           <!-- Languages -->
           <div class="d-flex justify-center">
             <v-icon large>mdi-file-code-outline</v-icon>
@@ -95,7 +109,7 @@ import {
 } from '@vue/composition-api'
 import { CommitsResponse, GithubCommit, GithubRepository } from '@/api/Github'
 import BaseContainer from '@/components/BaseContainer.vue'
-import RepositoryDetail from '@/components/RepositoryDetail.vue'
+import RepositoryDetail from '~/components/github/RepositoryDetail.vue'
 import ErrorMessage from '@/components/ErrorMessage.vue'
 import { languageThemes } from '@/lib/languageIcon'
 
@@ -111,6 +125,7 @@ type State = {
     percentageString: string
   }[]
   recentCommits: GithubCommitWithSha[]
+  readme: string
   errorMessage: string
 }
 
@@ -128,6 +143,7 @@ export default defineComponent({
       repo: null,
       languages: [],
       recentCommits: [],
+      readme: '',
       errorMessage: '',
     })
 
@@ -172,6 +188,12 @@ export default defineComponent({
       })
     }
 
+    const fetchReadMe = async (): Promise<void> => {
+      const response = await $repositories.github.readme(repoName)
+      const readme = decodeURIComponent(escape(window.atob(response.content)))
+      state.readme = readme
+    }
+
     const repoStatImageUrl = computed(() => {
       const isDark = $vuetify.theme.dark
       return $getRepoStatImageUrl(isDark, '', repoName)
@@ -181,6 +203,7 @@ export default defineComponent({
       await fetchRepository()
       await fetchLanguages()
       await fetchRecentCommits()
+      await fetchReadMe()
     })
 
     return {
@@ -191,3 +214,9 @@ export default defineComponent({
   },
 })
 </script>
+
+<style lang="scss" scoped>
+.readme {
+  overflow: scroll;
+}
+</style>

@@ -34,7 +34,7 @@ export default {
   css: [],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ['@nuxtjs/axios'],
+  modules: ['@nuxtjs/axios', '@nuxtjs/markdownit'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
@@ -64,6 +64,12 @@ export default {
       },
     ],
   ],
+
+  // Markdonwit module configuration
+  // https://github.com/nuxt-community/markdownit-module
+  markdownit: {
+    runtime: true,
+  },
 
   // Vuetify module configuration
   // https://github.com/nuxt-community/vuetify-module#options

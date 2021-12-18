@@ -46,7 +46,7 @@ import {
 } from '@nuxtjs/composition-api'
 import BaseContainer from '@/components/BaseContainer.vue'
 import { GithubUser } from '@/api/Github'
-import UserCard from '@/components/UserCard.vue'
+import UserCard from '@/components/github/UserCard.vue'
 import { Route } from '@/plugins/route'
 
 type State = {

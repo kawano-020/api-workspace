@@ -30,6 +30,10 @@ export type GithubCommit = {
   message: string
 }
 
+export type GithubContent = {
+  content: string
+}
+
 export type RepositoriesResponse = {
   items: GithubRepository[]
 }
@@ -87,6 +91,13 @@ export class Github {
       `${githubInfo.apiOrigin}repos/${githubInfo.userName}/` +
         `${repositoryName}/commits`,
       { params: { per_page: 10 } }
+    )
+  }
+
+  readme(repositoryName: string): Promise<GithubContent> {
+    return this.axios.$get(
+      `${githubInfo.apiOrigin}repos/${githubInfo.userName}/` +
+        `${repositoryName}/contents/README.md?ref=main`
     )
   }
 }
