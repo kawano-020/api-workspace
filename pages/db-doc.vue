@@ -1,16 +1,22 @@
 <template>
   <BaseContainer>
-    <ErrorMessage />
+    <!-- eslint-disable-next-line vue/no-v-html -->
+    <v-sheet class="db-document pa-2" :elevation="3" v-html="dbDoc" />
   </BaseContainer>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
-import ErrorMessage from '@/components/ErrorMessage.vue'
+import { computed, defineComponent } from '@nuxtjs/composition-api'
+import dbSchema from '@/docs/db/schema.md'
 
 export default defineComponent({
-  components: {
-    ErrorMessage,
+  setup() {
+    const dbDoc = computed(() => {
+      return dbSchema
+    })
+    return {
+      dbDoc,
+    }
   },
 })
 </script>
