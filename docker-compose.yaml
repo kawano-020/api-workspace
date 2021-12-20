@@ -1,32 +1,9 @@
 version: '3.8'
 services:
-  swagger-editor:
-    image: swaggerapi/swagger-editor
-    ports:
-      - "28001:8080"
-    volumes:
-      - ./docs/openapi.yaml:/docs
-    environment:
-      SWAGGER_FILE: /docs
-  swagger-ui:
-    image: swaggerapi/swagger-ui
-    ports:
-      - "28002:8080"
-    volumes:
-      - ./docs/openapi.yaml:/docs
-    environment:
-      SWAGGER_JSON: /docs/openapi.yaml
-  swagger-api:
-    image: stoplight/prism:3
-    ports:
-      - "28003:4010"
-    command: mock -h 0.0.0.0 /docs
-    volumes:
-      - ./docs/openapi.yaml:/docs
   redoc:
     image: redocly/redoc
     ports:
-      - 28004:80
+      - 8001:80
     volumes:
       - ./docs:/usr/share/nginx/html/docs
     environment:
