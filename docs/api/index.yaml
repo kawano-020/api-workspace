@@ -49,7 +49,7 @@ paths:
                 password: user_password
       responses:
         "200":
-          description: user response
+          description: generated tokens
           content:
             application/json:
               schema:
