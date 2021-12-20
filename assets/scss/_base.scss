@@ -2,10 +2,12 @@
   * {
     margin: 12px 0;
   }
-  h1 {
-    font-size: 2rem;
+  h1, h2 {
     padding: 4px;
     border-bottom: 1px solid;
+  }
+  h1 {
+    font-size: 2rem;
     margin-bottom: 24px;
   }
   h2 {
