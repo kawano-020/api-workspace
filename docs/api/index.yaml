@@ -208,7 +208,7 @@ components:
             $ref: "#/components/schemas/Error"
           example:
             code: 500
-            message: a
+            message: An unknown server error occurred internally.
 
 
 security:
