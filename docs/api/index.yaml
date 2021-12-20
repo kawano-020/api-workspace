@@ -105,7 +105,7 @@ components:
         access JWT for API
 
         認証トークンにはJWTを使用する。
-        トークンはAccessとRefreshが存在し、Authorization Headerにアクセストークンを載せた形でリクエストする。
+        トークンの種別にはAccessとRefreshが存在し、リクエストの際にはAuthorization Headerにアクセストークンを載せる。
   
         各トークンのclaimには以下を持たせる。
 
