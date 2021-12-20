@@ -4,15 +4,24 @@ info:
   title: API Template
   x-logo:
     url: https://github-readme-stats.vercel.app/api/pin/?username=kawano-020&repo=api-workspace&show_owner=true&show_icons=true
-  description: >-
-    A sample API that uses a sample-site as an example to demonstrate features in
-    the OpenAPI 3.0 specification
+  description: |
+    This API is for pesonal develepments.
+  
+    # Introduction
+
+    ユーザーがコンテンツ(呟き)を発信し、それに対してリプライやいいねができるサービスのAPI
+
+    Twitterの簡易版のようなイメージ
+
+    また、ユーザーの各アクションに対してログを作成していく
+
 servers:
-  - url: 'http://localhost:8000'
+  - url: 'http://localhost:28000'
+
 paths:
   /users:
     get:
-      description: >
+      description: |
         Returns all users
       operationId: findUsers
       parameters:
@@ -48,6 +57,23 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 components:
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        access JWT for API
+
+        認証トークンにはJWTを使用する。
+        トークンはAccessとRefreshが存在し、各claimには以下を持たせる。
+
+        - sub: ユーザーの`email`
+
+        - exp: トークンの有効期限 (UNIX時間)
+
+        - type: トークンの用途 (`access` | `refresh`)
+
   schemas:
     User:
       type: "object"
@@ -78,6 +104,6 @@ components:
           type: "string"
         message:
           type: "string"
-externalDocs:
-  description: "Find out more about Swagger"
-  url: "http://swagger.io"
+
+security:
+  - Bearer: []
