@@ -22,7 +22,7 @@ jobs:
         run: npm install -g redoc-cli
       
       - name: Generate Redoc HTML
-        run: redoc-cli bundle ./docs/openapi.yaml --output ./static/redoc.html
+        run: redoc-cli bundle ./docs/api/openapi.yaml --output ./static/redoc.html
 
       - name: Install Dependencies
         run: npm ci

@@ -7,4 +7,4 @@ services:
     volumes:
       - ./docs:/usr/share/nginx/html/docs
     environment:
-      SPEC_URL: /docs/openapi.yaml
+      SPEC_URL: /docs/api/openapi.yaml
