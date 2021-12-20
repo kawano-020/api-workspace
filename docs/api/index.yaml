@@ -109,11 +109,11 @@ components:
   
         各トークンのclaimには以下を持たせる。
 
-        - sub: ユーザーの`email`
+        - `sub`: ユーザーの`email`
 
-        - exp: トークンの有効期限 (UNIX時間)
+        - `exp`: トークンの有効期限 (UNIX時間)
 
-        - type: トークンの用途 (`access` | `refresh`)
+        - `type`: トークンの用途 (`access` | `refresh`)
   schemas:
     AccessToken:
       type: string
