@@ -35,10 +35,7 @@ paths:
               type: object
               properties:
                 email:
-                  type: string
-                  description: ユーザーの`email`
-                  minLength: 1
-                  maxLength: 225
+                  $ref: "#/components/schemas/Email"
                 password:
                   type: string
                   description: ユーザーのHash処理前の`password`
@@ -54,21 +51,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Tokens"
-        "400":
-          $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
         "500":
           $ref: "#/components/responses/InternalServerError"
   /users:
     get:
       description: |
-        Returns all users
-      operationId: findUsers
+        ユーザー一覧を取得するためのAPI
+      operationId: users
+      # TODO: 認証不要にする
+      tags:
+        - user
       parameters:
         - name: tags
           in: query
@@ -91,9 +85,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Tokens"
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
 components:
   securitySchemes:
@@ -115,6 +115,15 @@ components:
 
         - `type`: トークンの用途 (`access` | `refresh`)
   schemas:
+    UUID:
+      type: "string"
+      example: "71a9b613-1f4e-4247-6da9-fb66a7ab2a4b"
+    Email:
+      type: "string"
+      format: email
+      minLength: 1
+      maxLength: 225
+      example: example@example.com
     AccessToken:
       type: string
       description: アクセストークン
@@ -138,23 +147,17 @@ components:
           $ref: "#/components/schemas/RefreshToken"
     User:
       type: "object"
-      required:
-        - "name"
       properties:
         id:
-          type: "integer"
-          format: "int64"
-          example: 100
-        name:
+          $ref: "#/components/schemas/UUID"
+        first_name:
           type: "string"
-          example: "Taro"
-        status:
+          example: "田中"
+        last_name:
           type: "string"
-          description: "user status"
-          enum:
-            - "pending"
-            - "active"
-            - "inactive"
+          example: "太郎"
+        email:
+          $ref: "#/components/schemas/Email"
     Error:
       type: object
       properties:
@@ -217,3 +220,5 @@ security:
 tags:
   - name: auth
     description: "**認証**に関するAPI群"
+  - name: user
+    description: "**ユーザー**に関するAPI群"
