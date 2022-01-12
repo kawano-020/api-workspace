@@ -1,0 +1,12 @@
+type: "object"
+properties:
+  id:
+    $ref: "./UUID.yaml"
+  first_name:
+    type: "string"
+    example: "田中"
+  last_name:
+    type: "string"
+    example: "太郎"
+  email:
+    $ref: "./Email.yaml"

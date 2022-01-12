@@ -1,0 +1,14 @@
+UUID:
+  $ref: "./UUID.yaml"
+Email:
+  $ref: "./Email.yaml"
+AccessToken:
+  $ref: "./AccessToken.yaml"
+RefreshToken:
+  $ref: "./RefreshToken.yaml"
+Tokens:
+  $ref: "./Tokens.yaml"
+User:
+  $ref: "./User.yaml"
+Error:
+  $ref: "./Error.yaml"

@@ -18,11 +18,14 @@ jobs:
           cache: npm
           cache-dependency-path: '**/package-lock.json'
       
+      - name: Set up Swagger CLI
+        run: npm install -g swagger-cli
+      
       - name: Set up Redoc CLI
         run: npm install -g redoc-cli
       
       - name: Generate Redoc HTML
-        run: redoc-cli bundle ./docs/api/index.yaml --output ./static/redoc.html
+        run: npm run generate-redoc
 
       - name: Install Dependencies
         run: npm ci

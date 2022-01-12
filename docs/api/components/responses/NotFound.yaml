@@ -1,0 +1,8 @@
+description: not found
+content:
+  application/json:
+    schema:
+      $ref: "../schemas/Error.yaml"
+    example:
+      code: 404
+      message: The requested resource could not be found.

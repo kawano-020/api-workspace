@@ -1,0 +1,2 @@
+Bearer:
+  $ref: "./Bearer.yaml"

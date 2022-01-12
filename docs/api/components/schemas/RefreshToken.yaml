@@ -1,0 +1,6 @@
+type: string
+description: リフレッシュトークン
+example: "\
+  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.\
+  eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiZXhwIjoiMTIzNDU5ODc2MCIsInR5cGUiOiJyZWZyZXNoIn0.\
+  69IVLPFVZK_rXBo2___QIETaQc4TXm7nx-mFjSz6sOY"

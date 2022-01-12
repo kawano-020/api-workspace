@@ -1,0 +1,6 @@
+type: string
+description: アクセストークン
+example: "\
+  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.\
+  eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiZXhwIjoiMTIzNDU2Nzg5MCIsInR5cGUiOiJhY2Nlc3MifQ.\
+  3-8G0WXFGwu4Cd9Fl66AsYjBPJgtfO9CIZvdkoGW13U"

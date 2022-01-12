@@ -1,0 +1,36 @@
+post:
+  operationId: auth.login
+  tags:
+    - auth
+  security: []
+  summary: ログインする(JWTを得る)ためのAPI
+  description: |
+    ユーザーの`email`とHash処理前の`password`が正しい場合に対象のユーザーの`access`と`refresh`それぞれのJWTを返す。
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            email:
+              $ref: "../components/schemas/Email.yaml"
+            password:
+              type: string
+              description: hash処理前の`password`
+              minLength: 1
+              maxLength: 225
+          example:
+            email: example@example.com
+            password: user_password
+  responses:
+    "200":
+      description: generated tokens
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/Tokens.yaml"
+    "401":
+      $ref: "../components/responses/Unauthorized.yaml"
+    "500":
+      $ref: "../components/responses/InternalServerError.yaml"

@@ -1,0 +1,8 @@
+description: unauthorized
+content:
+  application/json:
+    schema:
+      $ref: "../schemas/Error.yaml"
+    example:
+      code: 401
+      message: Valid authentication credential lacks.

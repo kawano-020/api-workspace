@@ -1,0 +1,37 @@
+get:
+  description: |
+    ユーザー一覧を取得するためのAPI
+  operationId: users
+  tags:
+    - user
+  parameters:
+    - name: tags
+      in: query
+      description: tags to filter by
+      required: false
+      style: form
+      schema:
+        type: array
+        items:
+          type: string
+    - name: limit
+      in: query
+      description: maximum number of results to return
+      required: false
+      schema:
+        type: integer
+        format: int32
+  responses:
+    "200":
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "../components/schemas/User.yaml"
+    "401":
+      $ref: "../components/responses/Unauthorized.yaml"
+    "403":
+      $ref: "../components/responses/Forbidden.yaml"
+    "500":
+      $ref: "../components/responses/InternalServerError.yaml"

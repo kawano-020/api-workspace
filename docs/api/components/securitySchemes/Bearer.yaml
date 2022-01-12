@@ -1,0 +1,16 @@
+type: http
+scheme: bearer
+bearerFormat: JWT
+description: |
+  access JWT for API
+
+  認証トークンにはJWTを使用する。
+  トークンの種別にはAccessとRefreshが存在し、リクエストの際にはAuthorization Headerにアクセストークンを載せる。
+
+  各トークンのclaimには以下を持たせる。
+
+  - `sub`: ユーザーの`email`
+
+  - `exp`: トークンの有効期限 (UNIX時間)
+
+  - `type`: トークンの用途 (`access` | `refresh`)
