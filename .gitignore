@@ -17,5 +17,4 @@ dist
 .node-version
 
 # OpenAPI
-docs/api/openapi.yaml
 static/redoc.html

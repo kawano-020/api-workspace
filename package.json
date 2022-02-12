@@ -13,8 +13,7 @@
     "format:eslint": "npm run lint -- --fix",
     "format:prettier": "npm run lint:prettier -- -w",
     "format": "npm run format:prettier && npm run format:eslint",
-    "bundle-openapi": "swagger-cli bundle -o ./docs/api/openapi.yaml -t yaml docs/api/index.yaml",
-    "generate-": "npm run bundle-openapi && redoc-cli bundle ./docs/api/openapi.yaml --output ./static/redoc.html"
+    "generate-redoc": "redoc-cli bundle ./docs/api/openapi.yaml --output ./static/redoc.html"
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.13.6",
@@ -23,8 +22,7 @@
     "camelcase-keys": "^7.0.1",
     "core-js": "^3.15.1",
     "nuxt": "^2.15.7",
-    "redoc-cli": "^0.13.7",
-    "swagger-cli": "^4.0.4"
+    "redoc-cli": "^0.13.7"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.14.7",

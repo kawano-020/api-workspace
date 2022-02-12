@@ -5,6 +5,14 @@ services:
     ports:
       - 8001:80
     volumes:
-      - ./docs/api/:/usr/share/nginx/html/docs/
+      - ./docs/api/openapi.yaml:/usr/share/nginx/html/openapi.yaml
     environment:
-      SPEC_URL: docs/index.yaml
+      SPEC_URL: openapi.yaml
+  swagger-merger:
+    build: ./docker/swagger-merger
+    volumes:
+      - ./docker/swagger-merger/reload.ts:/reload.ts
+      - ./docs/api:/data
+    environment:
+      NODE_PATH: /usr/local/lib/node_modules
+    entrypoint: ts-node /reload.ts
