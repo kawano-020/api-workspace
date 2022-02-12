@@ -23,12 +23,15 @@ get:
         format: int32
   responses:
     "200":
+      description: created user
       content:
         application/json:
           schema:
             type: array
             items:
               $ref: "../components/schemas/User.yaml"
+    "400":
+      $ref: "../components/responses/BadRequest.yaml"
     "401":
       $ref: "../components/responses/Unauthorized.yaml"
     "403":

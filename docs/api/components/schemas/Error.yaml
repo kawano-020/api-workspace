@@ -5,3 +5,6 @@ properties:
     format: int32
   message:
     type: string
+required:
+  - code
+  - message

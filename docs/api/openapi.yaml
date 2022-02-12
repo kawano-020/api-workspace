@@ -45,6 +45,9 @@ paths:
                   description: hash処理前の`password`
                   minLength: 1
                   maxLength: 225
+              required:
+                - email
+                - password
               example:
                 email: example@example.com
                 password: user_password
@@ -58,14 +61,37 @@ paths:
                 properties:
                   access:
                     type: string
+                    format: jwt
                     description: アクセストークン
                     example: >-
                       eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiZXhwIjoiMTIzNDU2Nzg5MCIsInR5cGUiOiJhY2Nlc3MifQ.3-8G0WXFGwu4Cd9Fl66AsYjBPJgtfO9CIZvdkoGW13U
                   refresh:
                     type: string
+                    format: jwt
                     description: リフレッシュトークン
                     example: >-
                       eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiZXhwIjoiMTIzNDU5ODc2MCIsInR5cGUiOiJyZWZyZXNoIn0.69IVLPFVZK_rXBo2___QIETaQc4TXm7nx-mFjSz6sOY
+                required:
+                  - access
+                  - refresh
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+              example:
+                code: 400
+                message: Error Detail(s)
         '401':
           description: unauthorized
           content:
@@ -78,6 +104,9 @@ paths:
                     format: int32
                   message:
                     type: string
+                required:
+                  - code
+                  - message
               example:
                 code: 401
                 message: Valid authentication credential lacks.
@@ -93,6 +122,9 @@ paths:
                     format: int32
                   message:
                     type: string
+                required:
+                  - code
+                  - message
               example:
                 code: 500
                 message: An unknown server error occurred internally.
@@ -122,6 +154,7 @@ paths:
             format: int32
       responses:
         '200':
+          description: created user
           content:
             application/json:
               schema:
@@ -134,9 +167,13 @@ paths:
                       example: 71a9b613-1f4e-4247-6da9-fb66a7ab2a4b
                     first_name:
                       type: string
+                      minLength: 1
+                      maxLength: 255
                       example: 田中
                     last_name:
                       type: string
+                      minLength: 1
+                      maxLength: 255
                       example: 太郎
                     email:
                       type: string
@@ -144,6 +181,29 @@ paths:
                       minLength: 1
                       maxLength: 225
                       example: example@example.com
+                  required:
+                    - id
+                    - first_name
+                    - last_name
+                    - email
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+              example:
+                code: 400
+                message: Error Detail(s)
         '401':
           description: unauthorized
           content:
@@ -156,6 +216,9 @@ paths:
                     format: int32
                   message:
                     type: string
+                required:
+                  - code
+                  - message
               example:
                 code: 401
                 message: Valid authentication credential lacks.
@@ -171,6 +234,9 @@ paths:
                     format: int32
                   message:
                     type: string
+                required:
+                  - code
+                  - message
               example:
                 code: 403
                 message: Insufficient permissions to a resource.
@@ -186,6 +252,9 @@ paths:
                     format: int32
                   message:
                     type: string
+                required:
+                  - code
+                  - message
               example:
                 code: 500
                 message: An unknown server error occurred internally.
@@ -203,11 +272,11 @@ components:
 
         各トークンのclaimには以下を持たせる。
 
-        - `sub`: ユーザーの`email`
+        - `sub` : トークンの用途 ( `access` | `refresh` )
 
-        - `exp`: トークンの有効期限 (UNIX時間)
+        - `exp` : トークンの有効期限 (UNIX時間)
 
-        - `type`: トークンの用途 (`access` | `refresh`)
+        - `user_id` : ユーザーのID
   schemas:
     UUID:
       type: string
@@ -220,11 +289,13 @@ components:
       example: example@example.com
     AccessToken:
       type: string
+      format: jwt
       description: アクセストークン
       example: >-
         eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiZXhwIjoiMTIzNDU2Nzg5MCIsInR5cGUiOiJhY2Nlc3MifQ.3-8G0WXFGwu4Cd9Fl66AsYjBPJgtfO9CIZvdkoGW13U
     RefreshToken:
       type: string
+      format: jwt
       description: リフレッシュトークン
       example: >-
         eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiZXhwIjoiMTIzNDU5ODc2MCIsInR5cGUiOiJyZWZyZXNoIn0.69IVLPFVZK_rXBo2___QIETaQc4TXm7nx-mFjSz6sOY
@@ -233,14 +304,19 @@ components:
       properties:
         access:
           type: string
+          format: jwt
           description: アクセストークン
           example: >-
             eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiZXhwIjoiMTIzNDU2Nzg5MCIsInR5cGUiOiJhY2Nlc3MifQ.3-8G0WXFGwu4Cd9Fl66AsYjBPJgtfO9CIZvdkoGW13U
         refresh:
           type: string
+          format: jwt
           description: リフレッシュトークン
           example: >-
             eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiZXhwIjoiMTIzNDU5ODc2MCIsInR5cGUiOiJyZWZyZXNoIn0.69IVLPFVZK_rXBo2___QIETaQc4TXm7nx-mFjSz6sOY
+      required:
+        - access
+        - refresh
     User:
       type: object
       properties:
@@ -249,9 +325,13 @@ components:
           example: 71a9b613-1f4e-4247-6da9-fb66a7ab2a4b
         first_name:
           type: string
+          minLength: 1
+          maxLength: 255
           example: 田中
         last_name:
           type: string
+          minLength: 1
+          maxLength: 255
           example: 太郎
         email:
           type: string
@@ -259,6 +339,11 @@ components:
           minLength: 1
           maxLength: 225
           example: example@example.com
+      required:
+        - id
+        - first_name
+        - last_name
+        - email
     Error:
       type: object
       properties:
@@ -267,6 +352,9 @@ components:
           format: int32
         message:
           type: string
+      required:
+        - code
+        - message
   responses:
     BadRequest:
       description: bad request
@@ -280,6 +368,9 @@ components:
                 format: int32
               message:
                 type: string
+            required:
+              - code
+              - message
           example:
             code: 400
             message: Error Detail(s)
@@ -295,6 +386,9 @@ components:
                 format: int32
               message:
                 type: string
+            required:
+              - code
+              - message
           example:
             code: 401
             message: Valid authentication credential lacks.
@@ -310,6 +404,9 @@ components:
                 format: int32
               message:
                 type: string
+            required:
+              - code
+              - message
           example:
             code: 403
             message: Insufficient permissions to a resource.
@@ -325,6 +422,9 @@ components:
                 format: int32
               message:
                 type: string
+            required:
+              - code
+              - message
           example:
             code: 404
             message: The requested resource could not be found.
@@ -340,6 +440,9 @@ components:
                 format: int32
               message:
                 type: string
+            required:
+              - code
+              - message
           example:
             code: 500
             message: An unknown server error occurred internally.

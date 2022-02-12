@@ -5,9 +5,9 @@ services:
     ports:
       - 8001:80
     volumes:
-      - ./docs/api/openapi.yaml:/usr/share/nginx/html/openapi.yaml
+      - ./docs/api/:/usr/share/nginx/html/docs/
     environment:
-      SPEC_URL: openapi.yaml
+      SPEC_URL: docs/openapi.yaml
   swagger-merger:
     build: ./docker/swagger-merger
     volumes:

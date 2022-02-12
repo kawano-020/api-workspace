@@ -1,4 +1,5 @@
 type: string
+format: jwt
 description: リフレッシュトークン
 example: "\
   eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.\

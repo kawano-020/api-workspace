@@ -9,8 +9,8 @@ description: |
 
   各トークンのclaimには以下を持たせる。
 
-  - `sub`: ユーザーの`email`
+  - `sub` : トークンの用途 ( `access` | `refresh` )
 
-  - `exp`: トークンの有効期限 (UNIX時間)
+  - `exp` : トークンの有効期限 (UNIX時間)
 
-  - `type`: トークンの用途 (`access` | `refresh`)
+  - `user_id` : ユーザーのID

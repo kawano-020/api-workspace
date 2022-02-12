@@ -10,10 +10,13 @@ chokidar
     // eslint-disable-next-line no-console
     console.log(event, path)
 
-    swaggerMerger({ input: rootFile, output: mergedFile }).catch(
-      (err: object) => {
+    swaggerMerger({ input: rootFile, output: mergedFile })
+      .then(() => {
+        // eslint-disable-next-line no-console
+        console.log('ReBundled OpenAPI')
+      })
+      .catch((err: object) => {
         // eslint-disable-next-line no-console
         console.error(err)
-      }
-    )
+      })
   })
