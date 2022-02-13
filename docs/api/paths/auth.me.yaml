@@ -1,0 +1,53 @@
+get:
+  operationId: auth.me.get
+  tags:
+    - auth
+  summary: ログインユーザーの情報を取得するためのAPI
+  responses:
+    "200":
+      description: logged in user
+      content:
+        application/json:
+          schema:
+            allOf:
+              - type: object
+                properties:
+                  id:
+                    $ref: "../components/schemas/UUID.yaml"
+              - $ref: "../components/schemas/User.yaml"
+    "401":
+      $ref: "../components/responses/UnAuthorized.yaml"
+    "500":
+      $ref: "../components/responses/InternalServerError.yaml"
+patch:
+  operationId: auth.me.patch
+  tags:
+    - auth
+  summary: ログインユーザーの情報を変更するためのAPI
+  description: |
+    CSRF攻撃等のクラックを防ぐため、パスワードの変更に関してはリクエストボディに以下のプロパティを載せ、認証を挟むよう実装する。
+
+    - `current_password` : 現在のパスワード
+    - `new_password` : 新しいパスワード
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          allOf:
+            - $ref: "../components/schemas/User.yaml"
+            - type: object
+              properties:
+                current_password:
+                  $ref: "../components/schemas/Password.yaml"
+                new_password:
+                  $ref: "../components/schemas/Password.yaml"
+  responses:
+    "204":
+      $ref: "../components/responses/NoContent.yaml"
+    "400":
+      $ref: "../components/responses/BadRequest.yaml"
+    "401":
+      $ref: "../components/responses/UnAuthorized.yaml"
+    "500":
+      $ref: "../components/responses/InternalServerError.yaml"

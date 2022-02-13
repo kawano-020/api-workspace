@@ -1,21 +1,8 @@
-type: "object"
+type: object
 properties:
-  id:
-    $ref: "./UUID.yaml"
   first_name:
-    type: "string"
-    minLength: 1
-    maxLength: 255
-    example: "田中"
+    $ref: "./FirstName.yaml"
   last_name:
-    type: "string"
-    minLength: 1
-    maxLength: 255
-    example: "太郎"
+    $ref: "./LastName.yaml"
   email:
     $ref: "./Email.yaml"
-required:
-  - id
-  - first_name
-  - last_name
-  - email

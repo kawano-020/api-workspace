@@ -1,0 +1,62 @@
+post:
+  operationId: auth.signup.post
+  tags:
+    - auth
+  security: []
+  summary: ユーザーを仮登録するためのAPI
+  description: |
+    パスワードをDBに保存する際、Hash化は以下の仕様で行う。
+    - アルゴリズム : `bcrypt`
+    - ストレッチング : 8回
+  
+    リクエスト成功時、リクエストの内容を基に`user`テーブルに`status`を`tmp`としてレコードを作成し、
+    
+    入力された`email`に対して以下のメールを送信する。
+
+    本登録リンクのQueryStringに載せるトークン(SignupToken)はユーザーの`email`を以下の仕様でHash化した値を使用する。
+
+    - アルゴリズム : `bcrypt`
+    - ストレッチング : 8回
+
+    その際、`signup_token`テーブルに発行したトークンをユーザーと紐づけて保存する。
+
+    ```html
+    仮登録を受付けました。
+    以下のリンクから本登録を完了してください。
+
+    http://localhost:23000/verify-signup?token={SignupToken}
+    ```
+    
+    フロントでは、入力した`email`に送信されたメールに記載されているリンクを踏むことで本登録を完了させる。
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          allOf:
+            - $ref: "../components/schemas/User.yaml"
+            - type: object
+              properties:
+                password:
+                  $ref: "../components/schemas/Password.yaml"
+          required:
+            - first_name
+            - last_name
+            - email
+            - password
+  responses:
+    "201":
+      description: created temporary user
+      content:
+        application/json:
+          schema:
+            allOf:
+              - type: object
+                properties:
+                  id:
+                    $ref: "../components/schemas/UUID.yaml"
+              - $ref: "../components/schemas/User.yaml"
+    "400":
+      $ref: "../components/responses/BadRequest.yaml"
+    "500":
+      $ref: "../components/responses/InternalServerError.yaml"

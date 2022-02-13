@@ -4,6 +4,8 @@
 
 | テーブル名 | 概要 | 備考 |
 | :--- | :--- | :--- |
+| `password_reset_token` | パスワード再設定トークン | |
+| `signup_token` | ユーザー本登録トークン | |
 | `user` | ユーザー | |
 | `follow` | `user`に対してのフォロー | 中間テーブル |
 | `content` | ユーザーの呟き | |
@@ -30,6 +32,26 @@
 
 ---
 
+## `password_reset_token`
+
+| カラム名 | データ型 | PK | FK | UQ | NN | AI | UN | Default | 備考 |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `id` | INT | √ | - | √ | √ | √ | √ | - | |
+| `token` | VARCHAR(255) | - | - | - | √ | - | - | - | |
+| `user_id` | VARCHAR(255) | - | √ | √ | √ | - | - | - | `user` |
+
+---
+
+## `signup_token`
+
+| カラム名 | データ型 | PK | FK | UQ | NN | AI | UN | Default | 備考 |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `id` | INT | √ | - | √ | √ | √ | √ | - | |
+| `token` | VARCHAR(255) | - | - | - | √ | - | - | - | |
+| `user_id` | VARCHAR(255) | - | √ | √ | √ | - | - | - | `user` |
+
+---
+
 ## `user`
 
 | カラム名 | データ型 | PK | FK | UQ | NN | AI | UN | Default | 備考 |
@@ -39,6 +61,7 @@
 | `last_name` | VARCHAR(255) | - | - | - | √ | - | - | - | |
 | `email` | VARCHAR(255) | - | - | √ | √ | - | - | - | |
 | `password_hash` | VARCHAR(255) | - | - | - | √ | - | - | - | |
+| `status` | Enum( `tmp`, `active` ) | - | - | - | √ | - | - | `tmp` | `tmp`: 仮登録, `active`: 本登録 |
 | `created_at` | DATETIME | - | - | - | √ | - | - | `current_timestamp` | |
 | `updated_at` | DATETIME | - | - | - | √ | - | - | `current_timestamp on update current_timestamp` | |
 
@@ -55,24 +78,25 @@
 
 ---
 
-## `content`
-
-| カラム名 | データ型 | PK | FK | UQ | NN | AI | UN | Default | 備考 |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `id` | VARCHAR(255) | √ | - | √ | √ | - | - | - | UUID |
-| `user_id` | VARCHAR(255) | - | √ | - | √ | - | - | - | `user` |
-| `detail` | VARCHAR(65535) | - | - | - | √ | - | - | - | |
-| `created_at` | DATETIME | - | - | - | √ | - | - | `current_timestamp` | |
-| `updated_at` | DATETIME | - | - | - | √ | - | - | `current_timestamp on update current_timestamp` | |
-
----
-
 ## `category`
 
 | カラム名 | データ型 | PK | FK | UQ | NN | AI | UN | Default | 備考 |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | `id` | INT | √ | - | √ | √ | √ | √ | - | |
 | `name` | VARCHAR(255) | - | - | - | √ | - | - | - | |
+| `created_at` | DATETIME | - | - | - | √ | - | - | `current_timestamp` | |
+| `updated_at` | DATETIME | - | - | - | √ | - | - | `current_timestamp on update current_timestamp` | |
+
+---
+
+## `content`
+
+| カラム名 | データ型 | PK | FK | UQ | NN | AI | UN | Default | 備考 |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `id` | VARCHAR(255) | √ | - | √ | √ | - | - | - | UUID |
+| `user_id` | VARCHAR(255) | - | √ | - | √ | - | - | - | `user` |
+| `category_id` | INT | - | √ | - | √ | - | - | - | `category` |
+| `detail` | VARCHAR(65535) | - | - | - | √ | - | - | - | |
 | `created_at` | DATETIME | - | - | - | √ | - | - | `current_timestamp` | |
 | `updated_at` | DATETIME | - | - | - | √ | - | - | `current_timestamp on update current_timestamp` | |
 

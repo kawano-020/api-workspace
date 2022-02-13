@@ -20,7 +20,7 @@ servers:
 paths:
   /auth/login:
     post:
-      operationId: auth.login
+      operationId: auth.login.post
       tags:
         - auth
       security: []
@@ -42,7 +42,8 @@ paths:
                   example: example@example.com
                 password:
                   type: string
-                  description: hash処理前の`password`
+                  format: password
+                  description: Hash処理前のプレーンな文字列
                   minLength: 1
                   maxLength: 225
               required:
@@ -59,21 +60,628 @@ paths:
               schema:
                 type: object
                 properties:
-                  access:
+                  access_token:
                     type: string
                     format: jwt
                     description: アクセストークン
                     example: >-
                       eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiZXhwIjoiMTIzNDU2Nzg5MCIsInR5cGUiOiJhY2Nlc3MifQ.3-8G0WXFGwu4Cd9Fl66AsYjBPJgtfO9CIZvdkoGW13U
-                  refresh:
+                  refresh_token:
                     type: string
                     format: jwt
                     description: リフレッシュトークン
                     example: >-
                       eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiZXhwIjoiMTIzNDU5ODc2MCIsInR5cGUiOiJyZWZyZXNoIn0.69IVLPFVZK_rXBo2___QIETaQc4TXm7nx-mFjSz6sOY
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
                 required:
-                  - access
-                  - refresh
+                  - code
+                  - message
+              example:
+                code: 400
+                message: Error Detail(s)
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+              example:
+                code: 401
+                message: Valid authentication credential lacks.
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+              example:
+                code: 500
+                message: An unknown server error occurred internally.
+  /auth/signup:
+    post:
+      operationId: auth.signup.post
+      tags:
+        - auth
+      security: []
+      summary: ユーザーを仮登録するためのAPI
+      description: >
+        パスワードをDBに保存する際、Hash化は以下の仕様で行う。
+
+        - アルゴリズム : `bcrypt`
+
+        - ストレッチング : 8回
+
+
+        リクエスト成功時、リクエストの内容を基に`user`テーブルに`status`を`tmp`としてレコードを作成し、
+
+
+        入力された`email`に対して以下のメールを送信する。
+
+
+        本登録リンクのQueryStringに載せるトークン(SignupToken)はユーザーの`email`を以下の仕様でHash化した値を使用する。
+
+
+        - アルゴリズム : `bcrypt`
+
+        - ストレッチング : 8回
+
+
+        その際、`signup_token`テーブルに発行したトークンをユーザーと紐づけて保存する。
+
+
+        ```html
+
+        仮登録を受付けました。
+
+        以下のリンクから本登録を完了してください。
+
+
+        http://localhost:23000/verify-signup?token={SignupToken}
+
+        ```
+
+
+        フロントでは、入力した`email`に送信されたメールに記載されているリンクを踏むことで本登録を完了させる。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - type: object
+                  properties:
+                    first_name:
+                      type: string
+                      minLength: 1
+                      maxLength: 255
+                      example: 田中
+                    last_name:
+                      type: string
+                      minLength: 1
+                      maxLength: 255
+                      example: 太郎
+                    email:
+                      type: string
+                      format: email
+                      minLength: 1
+                      maxLength: 225
+                      example: example@example.com
+                - type: object
+                  properties:
+                    password:
+                      type: string
+                      format: password
+                      description: Hash処理前のプレーンな文字列
+                      minLength: 1
+                      maxLength: 225
+              required:
+                - first_name
+                - last_name
+                - email
+                - password
+      responses:
+        '201':
+          description: created temporary user
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    properties:
+                      id:
+                        type: string
+                        minLength: 36
+                        maxLength: 36
+                        example: 71a9b613-1f4e-4247-6da9-fb66a7ab2a4b
+                  - type: object
+                    properties:
+                      first_name:
+                        type: string
+                        minLength: 1
+                        maxLength: 255
+                        example: 田中
+                      last_name:
+                        type: string
+                        minLength: 1
+                        maxLength: 255
+                        example: 太郎
+                      email:
+                        type: string
+                        format: email
+                        minLength: 1
+                        maxLength: 225
+                        example: example@example.com
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+              example:
+                code: 400
+                message: Error Detail(s)
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+              example:
+                code: 500
+                message: An unknown server error occurred internally.
+  /auth/verify-signup:
+    post:
+      operationId: auth.verifySignup.post
+      tags:
+        - auth
+      security: []
+      summary: ユーザーを本登録するためのAPI
+      description: >
+        `signup_token`テーブルから、リクエストボディの`token`を検索し、
+
+
+        該当するレコードがあった場合に、そのレコードに紐付くユーザーの`status`を`active`に変更し、該当の`signup_token`レコードを削除する。
+
+
+        レスポンスでは`access`と`refresh`それぞれのJTWを返す。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  description: |
+                    以下の仕様で生成されたHash値
+
+                    - アルゴリズム : `bcrypt`
+                    - ストレッチング : 8回
+                  example: $2a$08$6LaQ6.VFF.pcG0Nktq8W2uIMZy4VA.VmLbt90kgBDF6SM1CgDTCn2
+              required:
+                - token
+      responses:
+        '200':
+          description: generated tokens
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    format: jwt
+                    description: アクセストークン
+                    example: >-
+                      eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiZXhwIjoiMTIzNDU2Nzg5MCIsInR5cGUiOiJhY2Nlc3MifQ.3-8G0WXFGwu4Cd9Fl66AsYjBPJgtfO9CIZvdkoGW13U
+                  refresh_token:
+                    type: string
+                    format: jwt
+                    description: リフレッシュトークン
+                    example: >-
+                      eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiZXhwIjoiMTIzNDU5ODc2MCIsInR5cGUiOiJyZWZyZXNoIn0.69IVLPFVZK_rXBo2___QIETaQc4TXm7nx-mFjSz6sOY
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+              example:
+                code: 400
+                message: Error Detail(s)
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+              example:
+                code: 500
+                message: An unknown server error occurred internally.
+  /auth/reset-password:
+    post:
+      operationId: auth.resetPassword.post
+      tags:
+        - auth
+      summary: パスワード再設定のメールを受け取るためのAPI
+      description: |
+        `password_reset_token`テーブルに発行したトークンを、リクエストボディの`email`が一致するユーザーと紐づけて保存する。
+
+        トークンはユーザーの`email`を以下の仕様でHash化した値を使用する。
+
+        - アルゴリズム : `bcrypt`
+        - ストレッチング : 8回
+
+        入力された`email`に対して以下のメールを送信する。
+        本登録リンクのQueryStringに載せるトークン(PasswordResetToken)
+
+        ```html
+        以下のリンクからパスワードの再設定を完了してください。
+
+        http://localhost:23000/verify-reset-password?token={PasswordResetToken}
+        ```
+
+        フロントでは、入力した`email`に送信されたメールに記載されているリンク先の画面で、新しいパスワードを入力することで再設定を完了させる。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  minLength: 1
+                  maxLength: 225
+                  example: example@example.com
+      responses:
+        '204':
+          description: no content
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+              example:
+                code: 400
+                message: Error Detail(s)
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+              example:
+                code: 404
+                message: The requested resource could not be found.
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+              example:
+                code: 500
+                message: An unknown server error occurred internally.
+  /auth/verify-reset-password:
+    post:
+      operationId: auth.verifyResetPassword.post
+      tags:
+        - auth
+      summary: パスワード再設定を完了するためのAPI
+      description: >
+        `password_reset_token`テーブルから、リクエストボディの`token`を検索し、
+
+
+        該当するレコードがあった場合に、そのレコードに紐付くユーザーの`password_hash`をリクエストボディの`new_password`を以下の仕様でHash化した値に変更する。
+
+
+        - アルゴリズム : `bcrypt`
+
+        - ストレッチング : 8回
+
+
+        その際、該当の`password_reset_token`レコードを削除する。
+
+
+        レスポンスでは`access`と`refresh`それぞれのJTWを返す。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  description: |
+                    以下の仕様で生成されたHash値
+
+                    - アルゴリズム : `bcrypt`
+                    - ストレッチング : 8回
+                  example: $2a$08$6LaQ6.VFF.pcG0Nktq8W2uIMZy4VA.VmLbt90kgBDF6SM1CgDTCn2
+                new_password:
+                  type: string
+                  format: password
+                  description: Hash処理前のプレーンな文字列
+                  minLength: 1
+                  maxLength: 225
+      responses:
+        '200':
+          description: generated tokens
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    format: jwt
+                    description: アクセストークン
+                    example: >-
+                      eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiZXhwIjoiMTIzNDU2Nzg5MCIsInR5cGUiOiJhY2Nlc3MifQ.3-8G0WXFGwu4Cd9Fl66AsYjBPJgtfO9CIZvdkoGW13U
+                  refresh_token:
+                    type: string
+                    format: jwt
+                    description: リフレッシュトークン
+                    example: >-
+                      eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiZXhwIjoiMTIzNDU5ODc2MCIsInR5cGUiOiJyZWZyZXNoIn0.69IVLPFVZK_rXBo2___QIETaQc4TXm7nx-mFjSz6sOY
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+              example:
+                code: 400
+                message: Error Detail(s)
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+              example:
+                code: 500
+                message: An unknown server error occurred internally.
+  /auth/me:
+    get:
+      operationId: auth.me.get
+      tags:
+        - auth
+      summary: ログインユーザーの情報を取得するためのAPI
+      responses:
+        '200':
+          description: logged in user
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    properties:
+                      id:
+                        type: string
+                        minLength: 36
+                        maxLength: 36
+                        example: 71a9b613-1f4e-4247-6da9-fb66a7ab2a4b
+                  - type: object
+                    properties:
+                      first_name:
+                        type: string
+                        minLength: 1
+                        maxLength: 255
+                        example: 田中
+                      last_name:
+                        type: string
+                        minLength: 1
+                        maxLength: 255
+                        example: 太郎
+                      email:
+                        type: string
+                        format: email
+                        minLength: 1
+                        maxLength: 225
+                        example: example@example.com
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+              example:
+                code: 401
+                message: Valid authentication credential lacks.
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+              example:
+                code: 500
+                message: An unknown server error occurred internally.
+    patch:
+      operationId: auth.me.patch
+      tags:
+        - auth
+      summary: ログインユーザーの情報を変更するためのAPI
+      description: |
+        CSRF攻撃等のクラックを防ぐため、パスワードの変更に関してはリクエストボディに以下のプロパティを載せ、認証を挟むよう実装する。
+
+        - `current_password` : 現在のパスワード
+        - `new_password` : 新しいパスワード
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - type: object
+                  properties:
+                    first_name:
+                      type: string
+                      minLength: 1
+                      maxLength: 255
+                      example: 田中
+                    last_name:
+                      type: string
+                      minLength: 1
+                      maxLength: 255
+                      example: 太郎
+                    email:
+                      type: string
+                      format: email
+                      minLength: 1
+                      maxLength: 225
+                      example: example@example.com
+                - type: object
+                  properties:
+                    current_password:
+                      type: string
+                      format: password
+                      description: Hash処理前のプレーンな文字列
+                      minLength: 1
+                      maxLength: 225
+                    new_password:
+                      type: string
+                      format: password
+                      description: Hash処理前のプレーンな文字列
+                      minLength: 1
+                      maxLength: 225
+      responses:
+        '204':
+          description: no content
         '400':
           description: bad request
           content:
@@ -130,31 +738,13 @@ paths:
                 message: An unknown server error occurred internally.
   /users:
     get:
-      description: |
-        ユーザー一覧を取得するためのAPI
-      operationId: users
+      operationId: users.get
+      summary: ユーザー一覧を取得するためのAPI
       tags:
         - user
-      parameters:
-        - name: tags
-          in: query
-          description: tags to filter by
-          required: false
-          style: form
-          schema:
-            type: array
-            items:
-              type: string
-        - name: limit
-          in: query
-          description: maximum number of results to return
-          required: false
-          schema:
-            type: integer
-            format: int32
       responses:
         '200':
-          description: created user
+          description: user list
           content:
             application/json:
               schema:
@@ -164,6 +754,8 @@ paths:
                   properties:
                     id:
                       type: string
+                      minLength: 36
+                      maxLength: 36
                       example: 71a9b613-1f4e-4247-6da9-fb66a7ab2a4b
                     first_name:
                       type: string
@@ -175,35 +767,6 @@ paths:
                       minLength: 1
                       maxLength: 255
                       example: 太郎
-                    email:
-                      type: string
-                      format: email
-                      minLength: 1
-                      maxLength: 225
-                      example: example@example.com
-                  required:
-                    - id
-                    - first_name
-                    - last_name
-                    - email
-        '400':
-          description: bad request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    format: int32
-                  message:
-                    type: string
-                required:
-                  - code
-                  - message
-              example:
-                code: 400
-                message: Error Detail(s)
         '401':
           description: unauthorized
           content:
@@ -222,24 +785,6 @@ paths:
               example:
                 code: 401
                 message: Valid authentication credential lacks.
-        '403':
-          description: forbidden
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    format: int32
-                  message:
-                    type: string
-                required:
-                  - code
-                  - message
-              example:
-                code: 403
-                message: Insufficient permissions to a resource.
         '500':
           description: internal server error
           content:
@@ -258,6 +803,25 @@ paths:
               example:
                 code: 500
                 message: An unknown server error occurred internally.
+  '/users/{userId}/contents':
+    get:
+      operationId: users.userId.contents.get
+      tags:
+        - user
+      summary: 特定のユーザーのコンテンツ一覧を取得するためのAPI
+  /contents:
+    get:
+      operationId: contents.get
+      tags:
+        - content
+      summary: 全コンテンツの一覧を取得するためのAPI
+      description: |
+        `reply`テーブルに存在しない、トップレベルのコンテンツ一覧を返す。
+    post:
+      operationId: contents.post
+      tags:
+        - content
+      summary: コンテンツを新規作成するためのAPI
 components:
   securitySchemes:
     Bearer:
@@ -280,6 +844,8 @@ components:
   schemas:
     UUID:
       type: string
+      minLength: 36
+      maxLength: 36
       example: 71a9b613-1f4e-4247-6da9-fb66a7ab2a4b
     Email:
       type: string
@@ -287,6 +853,12 @@ components:
       minLength: 1
       maxLength: 225
       example: example@example.com
+    Password:
+      type: string
+      format: password
+      description: Hash処理前のプレーンな文字列
+      minLength: 1
+      maxLength: 225
     AccessToken:
       type: string
       format: jwt
@@ -299,30 +871,9 @@ components:
       description: リフレッシュトークン
       example: >-
         eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiZXhwIjoiMTIzNDU5ODc2MCIsInR5cGUiOiJyZWZyZXNoIn0.69IVLPFVZK_rXBo2___QIETaQc4TXm7nx-mFjSz6sOY
-    Tokens:
-      type: object
-      properties:
-        access:
-          type: string
-          format: jwt
-          description: アクセストークン
-          example: >-
-            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiZXhwIjoiMTIzNDU2Nzg5MCIsInR5cGUiOiJhY2Nlc3MifQ.3-8G0WXFGwu4Cd9Fl66AsYjBPJgtfO9CIZvdkoGW13U
-        refresh:
-          type: string
-          format: jwt
-          description: リフレッシュトークン
-          example: >-
-            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiZXhwIjoiMTIzNDU5ODc2MCIsInR5cGUiOiJyZWZyZXNoIn0.69IVLPFVZK_rXBo2___QIETaQc4TXm7nx-mFjSz6sOY
-      required:
-        - access
-        - refresh
     User:
       type: object
       properties:
-        id:
-          type: string
-          example: 71a9b613-1f4e-4247-6da9-fb66a7ab2a4b
         first_name:
           type: string
           minLength: 1
@@ -339,11 +890,6 @@ components:
           minLength: 1
           maxLength: 225
           example: example@example.com
-      required:
-        - id
-        - first_name
-        - last_name
-        - email
     Error:
       type: object
       properties:
@@ -356,6 +902,8 @@ components:
         - code
         - message
   responses:
+    NoContent:
+      description: no content
     BadRequest:
       description: bad request
       content:
@@ -453,3 +1001,5 @@ tags:
     description: '**認証**に関するAPI群'
   - name: user
     description: '**ユーザー**に関するAPI群'
+  - name: content
+    description: '**コンテンツ**に関するAPI群'

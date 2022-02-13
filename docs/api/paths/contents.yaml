@@ -1,0 +1,12 @@
+get:
+  operationId: contents.get
+  tags:
+    - content
+  summary:  全コンテンツの一覧を取得するためのAPI
+  description: |
+    `reply`テーブルに存在しない、トップレベルのコンテンツ一覧を返す。
+post:
+  operationId: contents.post
+  tags:
+    - content
+  summary: コンテンツを新規作成するためのAPI

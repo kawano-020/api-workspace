@@ -1,9 +1,0 @@
-type: object
-properties:
-  access:
-    $ref: "./AccessToken.yaml"
-  refresh:
-    $ref: "./RefreshToken.yaml"
-required:
-  - access
-  - refresh

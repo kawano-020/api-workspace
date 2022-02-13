@@ -1,0 +1,8 @@
+type: string
+description: |
+  以下の仕様で生成されたHash値
+
+  - アルゴリズム : `bcrypt`
+  - ストレッチング : 8回
+
+example: $2a$08$6LaQ6.VFF.pcG0Nktq8W2uIMZy4VA.VmLbt90kgBDF6SM1CgDTCn2

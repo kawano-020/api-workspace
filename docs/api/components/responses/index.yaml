@@ -1,3 +1,5 @@
+NoContent:
+  $ref: "./NoContent.yaml"
 BadRequest:
   $ref: "./BadRequest.yaml"
 Unauthorized:

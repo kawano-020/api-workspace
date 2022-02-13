@@ -37,3 +37,5 @@ tags:
     description: "**認証**に関するAPI群"
   - name: user
     description: "**ユーザー**に関するAPI群"
+  - name: content
+    description: "**コンテンツ**に関するAPI群"

@@ -1,4 +1,18 @@
 /auth/login:
   $ref: "./auth.login.yaml"
+/auth/signup:
+  $ref: "./auth.signup.yaml"
+/auth/verify-signup:
+  $ref: "./auth.verifySignup.yaml"
+/auth/reset-password:
+  $ref: "./auth.resetPassword.yaml"
+/auth/verify-reset-password:
+  $ref: "./auth.verifyResetPassword.yaml"
+/auth/me:
+  $ref: "./auth.me.yaml"
 /users:
   $ref: "./users.yaml"
+/users/{userId}/contents:
+  $ref: "./users.userId.contents.yaml"
+/contents:
+  $ref: "./contents.yaml"

@@ -1,11 +1,15 @@
 post:
-  operationId: auth.login.post
+  operationId: auth.verifySignup.post
   tags:
     - auth
   security: []
-  summary: ログインする(JWTを得る)ためのAPI
+  summary: ユーザーを本登録するためのAPI
   description: |
-    ユーザーの`email`とHash処理前の`password`が正しい場合に対象のユーザーの`access`と`refresh`それぞれのJWTを返す。
+    `signup_token`テーブルから、リクエストボディの`token`を検索し、
+    
+    該当するレコードがあった場合に、そのレコードに紐付くユーザーの`status`を`active`に変更し、該当の`signup_token`レコードを削除する。
+
+    レスポンスでは`access`と`refresh`それぞれのJTWを返す。
   requestBody:
     required: true
     content:
@@ -13,16 +17,10 @@ post:
         schema:
           type: object
           properties:
-            email:
-              $ref: "../components/schemas/Email.yaml"
-            password:
-              $ref: "../components/schemas/Password.yaml"
+            token:
+              $ref: "../components/schemas/VerifyToken.yaml"
           required:
-            - email
-            - password
-          example:
-            email: example@example.com
-            password: user_password
+            - token
   responses:
     "200":
       description: generated tokens
@@ -37,7 +35,5 @@ post:
                 $ref: "../components/schemas/RefreshToken.yaml"
     "400":
       $ref: "../components/responses/BadRequest.yaml"
-    "401":
-      $ref: "../components/responses/Unauthorized.yaml"
     "500":
       $ref: "../components/responses/InternalServerError.yaml"
