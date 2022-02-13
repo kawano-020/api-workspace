@@ -4,12 +4,11 @@ post:
     - auth
   security: []
   summary: ユーザーを仮登録するためのAPI
-  description: |
-    パスワードをDBに保存する際、Hash化は以下の仕様で行う。
+  description: |  
+    リクエスト成功時、リクエストの内容を基に`user`テーブルに`status`を`tmp`、`password_hash`には以下の仕様でHash化した値を使用してレコードを作成し、
+
     - アルゴリズム : `bcrypt`
     - ストレッチング : 8回
-  
-    リクエスト成功時、リクエストの内容を基に`user`テーブルに`status`を`tmp`としてレコードを作成し、
     
     入力された`email`に対して以下のメールを送信する。
 
