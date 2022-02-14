@@ -13,6 +13,7 @@
     "format:eslint": "npm run lint -- --fix",
     "format:prettier": "npm run lint:prettier -- -w",
     "format": "npm run format:prettier && npm run format:eslint",
+    "lint:openapi": "spectral lint ./docs/api/openapi.yaml",
     "generate-redoc": "redoc-cli bundle ./docs/api/openapi.yaml --output ./static/redoc.html"
   },
   "dependencies": {
@@ -31,6 +32,7 @@
     "@nuxtjs/eslint-config-typescript": "^6.0.1",
     "@nuxtjs/eslint-module": "^3.0.2",
     "@nuxtjs/vuetify": "^1.12.2",
+    "@stoplight/spectral-cli": "^6.2.1",
     "eslint": "^7.29.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-nuxt": "^2.0.0",

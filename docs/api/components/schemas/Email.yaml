@@ -2,4 +2,3 @@ type: "string"
 format: email
 minLength: 1
 maxLength: 225
-example: example@example.com

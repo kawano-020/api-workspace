@@ -14,9 +14,9 @@ post:
           type: object
           properties:
             email:
-              $ref: "../components/schemas/Email.yaml"
+              $ref: "#/components/schemas/Email"
             password:
-              $ref: "../components/schemas/Password.yaml"
+              $ref: "#/components/schemas/Password"
           required:
             - email
             - password
@@ -25,19 +25,19 @@ post:
             password: user_password
   responses:
     "200":
-      description: generated tokens
+      description: "**Generated Tokens**"
       content:
         application/json:
           schema:
             type: object
             properties:
               access_token:
-                $ref: "../components/schemas/AccessToken.yaml"
+                $ref: "#/components/schemas/AccessToken"
               refresh_token:
-                $ref: "../components/schemas/RefreshToken.yaml"
+                $ref: "#/components/schemas/RefreshToken"
     "400":
-      $ref: "../components/responses/BadRequest.yaml"
+      $ref: "#/components/responses/BadRequest"
     "401":
-      $ref: "../components/responses/Unauthorized.yaml"
+      $ref: "#/components/responses/Unauthorized"
     "500":
-      $ref: "../components/responses/InternalServerError.yaml"
+      $ref: "#/components/responses/InternalServerError"

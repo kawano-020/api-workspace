@@ -1,0 +1,75 @@
+parameters:
+  - $ref: "#/components/parameters/ContentId"
+get:
+  operationId: contents.id.replies.get
+  tags:
+    - content
+  summary: 特定のコンテンツの返信先・返信一覧を取得するためのAPI
+  description: |
+    `replies`テーブルからそれぞれ以下のように参照し、該当のコンテンツを返す。
+
+    - `parent`
+      - パラメータの`content_id`と`repliy_content_id`が一致するレコードがあれば、そのレコードの`parent_content_id`に紐づくコンテンツを取得する。無ければ`null`として返す。
+    - `children`
+      - パラメータの`content_id`と`parent_content_id`が一致するレコードの`reply_content_id`に紐づくコンテンツを一覧で取得する。
+
+  responses:
+    "200":
+      description: "**Reply Content(s)**"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              parent:
+                description: 返信先のコンテンツ
+                $ref: "../components/schemas/Content.yaml"
+                nullable: true
+              children:
+                description: コンテンツへの返信
+                type: array
+                items:
+                  $ref: "#/components/schemas/Content"
+    "401":
+      $ref: "#/components/responses/Unauthorized"
+    "404":
+      $ref: "#/components/responses/NotFound"
+    "500":
+      $ref: "#/components/responses/InternalServerError"
+post:
+  operationId: contents.id.replies.post
+  tags:
+    - content
+  summary: 特定のコンテンツに返信するためのAPI
+  description: |
+    `contents`テーブルにリクエストユーザーを紐付けたレコードを作成する。
+  
+    その際、`replies`テーブルに以下の内容でレコードを作成する。
+    
+    - `parent_content_id` : パラメータの`content_id`
+    - `reply_content_id` : 作成したコンテンツのID
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            detail:
+              $ref: "#/components/schemas/ContentDetail"
+          required:
+            - detail
+  responses:
+    "201":
+      description: "**Created Content**"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Content"
+    "400":
+      $ref: "#/components/responses/BadRequest"
+    "401":
+      $ref: "#/components/responses/Unauthorized"
+    "404":
+      $ref: "#/components/responses/NotFound"
+    "500":
+      $ref: "#/components/responses/InternalServerError"

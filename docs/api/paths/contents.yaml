@@ -4,9 +4,52 @@ get:
     - content
   summary:  全コンテンツの一覧を取得するためのAPI
   description: |
-    `reply`テーブルに存在しない、トップレベルのコンテンツ一覧を返す。
+    `replies`テーブルに存在しない、トップレベルのコンテンツ一覧を返す。
+  responses:
+    "200":
+      description: "**Content List**"
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/Content"
+    "401":
+      $ref: "#/components/responses/Unauthorized"
+    "500":
+      $ref: "#/components/responses/InternalServerError"
 post:
   operationId: contents.post
   tags:
     - content
   summary: コンテンツを新規作成するためのAPI
+  description: |
+    `contents`テーブルにリクエストユーザーを紐付けたレコードを作成する。
+    
+    その際、以下の内容で`content_logs`テーブルにレコードを作成する。
+    - `content_id` : 作成したコンテンツのID
+    - `type` : `post`
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            detail:
+              $ref: "#/components/schemas/ContentDetail"
+          required:
+            - detail
+  responses:
+    "201":
+      description: "**Created Content**"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Content"
+    "400":
+      $ref: "#/components/responses/BadRequest"
+    "401":
+      $ref: "#/components/responses/Unauthorized"
+    "500":
+      $ref: "#/components/responses/InternalServerError"

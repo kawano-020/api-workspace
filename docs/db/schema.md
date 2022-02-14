@@ -1,16 +1,5 @@
 # DB Shema
 
-## テーブル一覧
-
-| テーブル名 | 概要 | 備考 |
-| :--- | :--- | :--- |
-| `user_log_type` | `user_log`のイベントタイプ | 中間テーブル |
-| `user_log` | `user`の作成・変更やフォローに関するログ | トランザクションテーブル |
-| `content_log_type` | `content_log`のイベントタイプ | 中間テーブル |
-| `content_log` | `content`に対しての返信やいいねに関するログ | トランザクションテーブル |
-
----
-
 ## 特記カラム属性
 
 - PK : PrimaryKey
@@ -20,11 +9,11 @@
 - AI : Auto Increment
 - UN : Unsigned
 
-※ ForeignKey制約には基本的にCASCADEを付与する
+※ ForeignKeyの`ON_DELETE`制約には基本的に`CASCADE`を付与する
 
 ---
 
-## `password_reset_token`
+## `password_reset_tokens`
 
 パスワード再設定トークン
 
@@ -37,7 +26,7 @@
 
 ---
 
-## `signup_token`
+## `signup_tokens`
 
 ユーザー本登録トークン
 
@@ -50,7 +39,7 @@
 
 ---
 
-## `user`
+## `users`
 
 ユーザー
 
@@ -67,7 +56,7 @@
 
 ---
 
-## `follow`
+## `follows`
 
 `user`に対してのフォロー : 中間テーブル
 
@@ -83,25 +72,7 @@
 
 ---
 
-## `content_category`
-
-コンテンツのカテゴリー : マスターテーブル
-
-- `name`
-  - `life_style` : 生活
-  - `engineering` : エンジニアリング
-  - `media` : メディア
-  - `other` : その他
-
-| カラム名 | データ型 | PK | FK | UQ | NN | AI | UN | Default | 備考 |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `id` | INT | √ | - | √ | √ | √ | √ | - | |
-| `name` | VARCHAR(255) | - | - | - | √ | - | - | - | |
-| `created_at` | DATETIME | - | - | - | √ | - | - | `current_timestamp` | |
-
----
-
-## `content`
+## `contents`
 
 コンテンツ
 
@@ -109,30 +80,29 @@
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | `id` | VARCHAR(255) | √ | - | √ | √ | - | - | - | UUID |
 | `user_id` | VARCHAR(255) | - | √ | - | √ | - | - | - | `user` |
-| `content_category_id` | INT | - | √ | - | √ | - | - | - | `content_category` |
 | `detail` | VARCHAR(65535) | - | - | - | √ | - | - | - | |
 | `created_at` | DATETIME | - | - | - | √ | - | - | `current_timestamp` | |
 | `updated_at` | DATETIME | - | - | - | √ | - | - | `current_timestamp on update current_timestamp` | |
 
 ---
 
-## `reply`
+## `replies`
 
 コンテンツに対しての返信 : 中間テーブル
 
-- `parent_contennt_id` : 返信先
+- `parent_content_id` : 返信先
 - `reply_content_id` : 返信
 
 | カラム名 | データ型 | PK | FK | UQ | NN | AI | UN | Default | 備考 |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | `id` | INT | √ | - | √ | √ | √ | √ | - | |
-| `parent_contennt_id` | VARCHAR(255) | - | √ | - | √ | - | - | - | `content` |
+| `parent_content_id` | VARCHAR(255) | - | √ | - | √ | - | - | - | `content` |
 | `reply_content_id` | VARCHAR(255) | - | √ | - | √ | - | - | - | `content` |
 | `created_at` | DATETIME | - | - | - | √ | - | - | `current_timestamp` | |
 
 ---
 
-## `good`
+## `goods`
 
 コンテンツに対しての高評価 : 中間テーブル
 
@@ -145,7 +115,7 @@
 
 ---
 
-## `user_log_type`
+## `user_log_types`
 
 ユーザーのアクションに関するログのタイプ : マスターテーブル
 
@@ -161,7 +131,7 @@
 
 ---
 
-## `user_log`
+## `user_logs`
 
 ユーザーのアクションに関するログ : トランザクションテーブル
 
@@ -174,7 +144,7 @@
 
 ---
 
-## `content_log_type`
+## `content_log_types`
 
 コンテンツのアクションに関するログのタイプ : マスターテーブル
 
@@ -190,7 +160,7 @@
 
 ---
 
-## `content_log`
+## `content_logs`
 
 コンテンツのアクションに関するログ : トランザクションテーブル
 
@@ -198,6 +168,5 @@
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | `id` | INT | √ | - | √ | √ | √ | √ | - | |
 | `content_id` | VARCHAR(255) | - | √ | - | √ | - | - | - | `content` |
-| `sub_content_id` | VARCHAR(255) | - | √ | - | - | - | - | - | `content` |
 | `type` | INT | - | √ | - | √ | - | - | - | `content_log_type` |
 | `created_at` | DATETIME | - | - | - | √ | - | - | `current_timestamp` | |

@@ -15,6 +15,9 @@ info:
     Twitterの簡易版のようなイメージ
 
     また、ユーザーの各アクションに対してログを作成していく
+  contact:
+    name: MyGithub
+    url: 'https://github.com/kawano-020'
 servers:
   - url: 'http://localhost:28000'
 paths:
@@ -35,17 +38,9 @@ paths:
               type: object
               properties:
                 email:
-                  type: string
-                  format: email
-                  minLength: 1
-                  maxLength: 225
-                  example: example@example.com
+                  $ref: '#/components/schemas/Email'
                 password:
-                  type: string
-                  format: password
-                  description: Hash処理前のプレーンな文字列
-                  minLength: 1
-                  maxLength: 225
+                  $ref: '#/components/schemas/Password'
               required:
                 - email
                 - password
@@ -54,78 +49,22 @@ paths:
                 password: user_password
       responses:
         '200':
-          description: generated tokens
+          description: '**Generated Tokens**'
           content:
             application/json:
               schema:
                 type: object
                 properties:
                   access_token:
-                    type: string
-                    format: jwt
-                    description: アクセストークン
-                    example: >-
-                      eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiZXhwIjoiMTIzNDU2Nzg5MCIsInR5cGUiOiJhY2Nlc3MifQ.3-8G0WXFGwu4Cd9Fl66AsYjBPJgtfO9CIZvdkoGW13U
+                    $ref: '#/components/schemas/AccessToken'
                   refresh_token:
-                    type: string
-                    format: jwt
-                    description: リフレッシュトークン
-                    example: >-
-                      eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiZXhwIjoiMTIzNDU5ODc2MCIsInR5cGUiOiJyZWZyZXNoIn0.69IVLPFVZK_rXBo2___QIETaQc4TXm7nx-mFjSz6sOY
+                    $ref: '#/components/schemas/RefreshToken'
         '400':
-          description: bad request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    format: int32
-                  message:
-                    type: string
-                required:
-                  - code
-                  - message
-              example:
-                code: 400
-                message: Error Detail(s)
+          $ref: '#/components/responses/BadRequest'
         '401':
-          description: unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    format: int32
-                  message:
-                    type: string
-                required:
-                  - code
-                  - message
-              example:
-                code: 401
-                message: Valid authentication credential lacks.
+          $ref: '#/components/responses/Unauthorized'
         '500':
-          description: internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    format: int32
-                  message:
-                    type: string
-                required:
-                  - code
-                  - message
-              example:
-                code: 500
-                message: An unknown server error occurred internally.
+          $ref: '#/components/responses/InternalServerError'
   /auth/signup:
     post:
       operationId: auth.signup.post
@@ -134,7 +73,7 @@ paths:
       security: []
       summary: ユーザーを仮登録するためのAPI
       description: >
-        リクエスト成功時、リクエストの内容を基に`user`テーブルに`status`を`tmp`、`password_hash`には以下の仕様でHash化した値を使用してレコードを作成し、
+        リクエスト成功時、リクエストの内容を基に`users`テーブルに`status`を`tmp`、`password_hash`には以下の仕様でHash化した値を使用してレコードを作成し、
 
 
         - アルゴリズム : `bcrypt`
@@ -153,7 +92,7 @@ paths:
         - ストレッチング : 8回
 
 
-        その際、`signup_token`テーブルに発行したトークンをユーザーと紐づけて保存する。
+        その際、`signup_tokens`テーブルに発行したトークンをユーザーと紐づけて保存する。
 
 
         ```html
@@ -175,32 +114,11 @@ paths:
           application/json:
             schema:
               allOf:
-                - type: object
-                  properties:
-                    first_name:
-                      type: string
-                      minLength: 1
-                      maxLength: 255
-                      example: 田中
-                    last_name:
-                      type: string
-                      minLength: 1
-                      maxLength: 255
-                      example: 太郎
-                    email:
-                      type: string
-                      format: email
-                      minLength: 1
-                      maxLength: 225
-                      example: example@example.com
+                - $ref: '#/components/schemas/User'
                 - type: object
                   properties:
                     password:
-                      type: string
-                      format: password
-                      description: Hash処理前のプレーンな文字列
-                      minLength: 1
-                      maxLength: 225
+                      $ref: '#/components/schemas/Password'
               required:
                 - first_name
                 - last_name
@@ -208,7 +126,7 @@ paths:
                 - password
       responses:
         '201':
-          description: created temporary user
+          description: '**Created Temporary User**'
           content:
             application/json:
               schema:
@@ -216,64 +134,12 @@ paths:
                   - type: object
                     properties:
                       id:
-                        type: string
-                        minLength: 36
-                        maxLength: 36
-                        example: 71a9b613-1f4e-4247-6da9-fb66a7ab2a4b
-                  - type: object
-                    properties:
-                      first_name:
-                        type: string
-                        minLength: 1
-                        maxLength: 255
-                        example: 田中
-                      last_name:
-                        type: string
-                        minLength: 1
-                        maxLength: 255
-                        example: 太郎
-                      email:
-                        type: string
-                        format: email
-                        minLength: 1
-                        maxLength: 225
-                        example: example@example.com
+                        $ref: '#/components/schemas/UUID'
+                  - $ref: '#/components/schemas/User'
         '400':
-          description: bad request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    format: int32
-                  message:
-                    type: string
-                required:
-                  - code
-                  - message
-              example:
-                code: 400
-                message: Error Detail(s)
+          $ref: '#/components/responses/BadRequest'
         '500':
-          description: internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    format: int32
-                  message:
-                    type: string
-                required:
-                  - code
-                  - message
-              example:
-                code: 500
-                message: An unknown server error occurred internally.
+          $ref: '#/components/responses/InternalServerError'
   /auth/verify-signup:
     post:
       operationId: auth.verifySignup.post
@@ -282,7 +148,7 @@ paths:
       security: []
       summary: ユーザーを本登録するためのAPI
       description: >
-        `signup_token`テーブルから、リクエストボディの`token`を検索し、
+        `signup_tokens`テーブルから、リクエストボディの`token`を検索し、
 
 
         該当するレコードがあった場合に、そのレコードに紐付くユーザーの`status`を`active`に変更し、該当の`signup_token`レコードを削除する。
@@ -297,93 +163,57 @@ paths:
               type: object
               properties:
                 token:
-                  type: string
-                  description: |
-                    以下の仕様で生成されたHash値
-
-                    - アルゴリズム : `bcrypt`
-                    - ストレッチング : 8回
-                  example: $2a$08$6LaQ6.VFF.pcG0Nktq8W2uIMZy4VA.VmLbt90kgBDF6SM1CgDTCn2
+                  $ref: '#/components/schemas/VerifyToken'
               required:
                 - token
       responses:
         '200':
-          description: generated tokens
+          description: '**Generated Tokens**'
           content:
             application/json:
               schema:
                 type: object
                 properties:
                   access_token:
-                    type: string
-                    format: jwt
-                    description: アクセストークン
-                    example: >-
-                      eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiZXhwIjoiMTIzNDU2Nzg5MCIsInR5cGUiOiJhY2Nlc3MifQ.3-8G0WXFGwu4Cd9Fl66AsYjBPJgtfO9CIZvdkoGW13U
+                    $ref: '#/components/schemas/AccessToken'
                   refresh_token:
-                    type: string
-                    format: jwt
-                    description: リフレッシュトークン
-                    example: >-
-                      eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiZXhwIjoiMTIzNDU5ODc2MCIsInR5cGUiOiJyZWZyZXNoIn0.69IVLPFVZK_rXBo2___QIETaQc4TXm7nx-mFjSz6sOY
+                    $ref: '#/components/schemas/RefreshToken'
         '400':
-          description: bad request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    format: int32
-                  message:
-                    type: string
-                required:
-                  - code
-                  - message
-              example:
-                code: 400
-                message: Error Detail(s)
+          $ref: '#/components/responses/BadRequest'
         '500':
-          description: internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    format: int32
-                  message:
-                    type: string
-                required:
-                  - code
-                  - message
-              example:
-                code: 500
-                message: An unknown server error occurred internally.
+          $ref: '#/components/responses/InternalServerError'
   /auth/reset-password:
     post:
       operationId: auth.resetPassword.post
       tags:
         - auth
       summary: パスワード再設定のメールを受け取るためのAPI
-      description: |
-        `password_reset_token`テーブルに発行したトークンを、リクエストボディの`email`が一致するユーザーと紐づけて保存する。
+      description: >
+        `password_reset_tokens`テーブルに発行したトークンを、リクエストボディの`email`が一致するユーザーと紐づけて保存する。
+
 
         トークンはユーザーの`email`を以下の仕様でHash化した値を使用する。
 
+
         - アルゴリズム : `bcrypt`
+
         - ストレッチング : 8回
 
+
         入力された`email`に対して以下のメールを送信する。
+
         本登録リンクのQueryStringに載せるトークン(PasswordResetToken)
 
+
         ```html
+
         以下のリンクからパスワードの再設定を完了してください。
 
+
         http://localhost:23000/verify-reset-password?token={PasswordResetToken}
+
         ```
+
 
         フロントでは、入力した`email`に送信されたメールに記載されているリンク先の画面で、新しいパスワードを入力することで再設定を完了させる。
       requestBody:
@@ -394,68 +224,16 @@ paths:
               type: object
               properties:
                 email:
-                  type: string
-                  format: email
-                  minLength: 1
-                  maxLength: 225
-                  example: example@example.com
+                  $ref: '#/components/schemas/Email'
       responses:
         '204':
-          description: no content
+          $ref: '#/components/responses/NoContent'
         '400':
-          description: bad request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    format: int32
-                  message:
-                    type: string
-                required:
-                  - code
-                  - message
-              example:
-                code: 400
-                message: Error Detail(s)
+          $ref: '#/components/responses/BadRequest'
         '404':
-          description: not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    format: int32
-                  message:
-                    type: string
-                required:
-                  - code
-                  - message
-              example:
-                code: 404
-                message: The requested resource could not be found.
+          $ref: '#/components/responses/NotFound'
         '500':
-          description: internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    format: int32
-                  message:
-                    type: string
-                required:
-                  - code
-                  - message
-              example:
-                code: 500
-                message: An unknown server error occurred internally.
+          $ref: '#/components/responses/InternalServerError'
   /auth/verify-reset-password:
     post:
       operationId: auth.verifyResetPassword.post
@@ -463,7 +241,7 @@ paths:
         - auth
       summary: パスワード再設定を完了するためのAPI
       description: >
-        `password_reset_token`テーブルから、リクエストボディの`token`を検索し、
+        `password_reset_tokens`テーブルから、リクエストボディの`token`を検索し、
 
 
         該当するレコードがあった場合に、そのレコードに紐付くユーザーの`password_hash`をリクエストボディの`new_password`を以下の仕様でHash化した値に変更する。
@@ -486,75 +264,25 @@ paths:
               type: object
               properties:
                 token:
-                  type: string
-                  description: |
-                    以下の仕様で生成されたHash値
-
-                    - アルゴリズム : `bcrypt`
-                    - ストレッチング : 8回
-                  example: $2a$08$6LaQ6.VFF.pcG0Nktq8W2uIMZy4VA.VmLbt90kgBDF6SM1CgDTCn2
+                  $ref: '#/components/schemas/VerifyToken'
                 new_password:
-                  type: string
-                  format: password
-                  description: Hash処理前のプレーンな文字列
-                  minLength: 1
-                  maxLength: 225
+                  $ref: '#/components/schemas/Password'
       responses:
         '200':
-          description: generated tokens
+          description: '**Generated Tokens**'
           content:
             application/json:
               schema:
                 type: object
                 properties:
                   access_token:
-                    type: string
-                    format: jwt
-                    description: アクセストークン
-                    example: >-
-                      eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiZXhwIjoiMTIzNDU2Nzg5MCIsInR5cGUiOiJhY2Nlc3MifQ.3-8G0WXFGwu4Cd9Fl66AsYjBPJgtfO9CIZvdkoGW13U
+                    $ref: '#/components/schemas/AccessToken'
                   refresh_token:
-                    type: string
-                    format: jwt
-                    description: リフレッシュトークン
-                    example: >-
-                      eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiZXhwIjoiMTIzNDU5ODc2MCIsInR5cGUiOiJyZWZyZXNoIn0.69IVLPFVZK_rXBo2___QIETaQc4TXm7nx-mFjSz6sOY
+                    $ref: '#/components/schemas/RefreshToken'
         '400':
-          description: bad request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    format: int32
-                  message:
-                    type: string
-                required:
-                  - code
-                  - message
-              example:
-                code: 400
-                message: Error Detail(s)
+          $ref: '#/components/responses/BadRequest'
         '500':
-          description: internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    format: int32
-                  message:
-                    type: string
-                required:
-                  - code
-                  - message
-              example:
-                code: 500
-                message: An unknown server error occurred internally.
+          $ref: '#/components/responses/InternalServerError'
   /auth/me:
     get:
       operationId: auth.me.get
@@ -563,7 +291,7 @@ paths:
       summary: ログインユーザーの情報を取得するためのAPI
       responses:
         '200':
-          description: logged in user
+          description: '**Logged in User**'
           content:
             application/json:
               schema:
@@ -571,64 +299,12 @@ paths:
                   - type: object
                     properties:
                       id:
-                        type: string
-                        minLength: 36
-                        maxLength: 36
-                        example: 71a9b613-1f4e-4247-6da9-fb66a7ab2a4b
-                  - type: object
-                    properties:
-                      first_name:
-                        type: string
-                        minLength: 1
-                        maxLength: 255
-                        example: 田中
-                      last_name:
-                        type: string
-                        minLength: 1
-                        maxLength: 255
-                        example: 太郎
-                      email:
-                        type: string
-                        format: email
-                        minLength: 1
-                        maxLength: 225
-                        example: example@example.com
+                        $ref: '#/components/schemas/UUID'
+                  - $ref: '#/components/schemas/User'
         '401':
-          description: unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    format: int32
-                  message:
-                    type: string
-                required:
-                  - code
-                  - message
-              example:
-                code: 401
-                message: Valid authentication credential lacks.
+          $ref: '#/components/responses/Unauthorized'
         '500':
-          description: internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    format: int32
-                  message:
-                    type: string
-                required:
-                  - code
-                  - message
-              example:
-                code: 500
-                message: An unknown server error occurred internally.
+          $ref: '#/components/responses/InternalServerError'
     patch:
       operationId: auth.me.patch
       tags:
@@ -645,95 +321,22 @@ paths:
           application/json:
             schema:
               allOf:
-                - type: object
-                  properties:
-                    first_name:
-                      type: string
-                      minLength: 1
-                      maxLength: 255
-                      example: 田中
-                    last_name:
-                      type: string
-                      minLength: 1
-                      maxLength: 255
-                      example: 太郎
-                    email:
-                      type: string
-                      format: email
-                      minLength: 1
-                      maxLength: 225
-                      example: example@example.com
+                - $ref: '#/components/schemas/User'
                 - type: object
                   properties:
                     current_password:
-                      type: string
-                      format: password
-                      description: Hash処理前のプレーンな文字列
-                      minLength: 1
-                      maxLength: 225
+                      $ref: '#/components/schemas/Password'
                     new_password:
-                      type: string
-                      format: password
-                      description: Hash処理前のプレーンな文字列
-                      minLength: 1
-                      maxLength: 225
+                      $ref: '#/components/schemas/Password'
       responses:
         '204':
-          description: no content
+          $ref: '#/components/responses/NoContent'
         '400':
-          description: bad request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    format: int32
-                  message:
-                    type: string
-                required:
-                  - code
-                  - message
-              example:
-                code: 400
-                message: Error Detail(s)
+          $ref: '#/components/responses/BadRequest'
         '401':
-          description: unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    format: int32
-                  message:
-                    type: string
-                required:
-                  - code
-                  - message
-              example:
-                code: 401
-                message: Valid authentication credential lacks.
+          $ref: '#/components/responses/Unauthorized'
         '500':
-          description: internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    format: int32
-                  message:
-                    type: string
-                required:
-                  - code
-                  - message
-              example:
-                code: 500
-                message: An unknown server error occurred internally.
+          $ref: '#/components/responses/InternalServerError'
   /users:
     get:
       operationId: users.get
@@ -742,7 +345,7 @@ paths:
         - user
       responses:
         '200':
-          description: user list
+          description: '**User List**'
           content:
             application/json:
               schema:
@@ -751,62 +354,40 @@ paths:
                   type: object
                   properties:
                     id:
-                      type: string
-                      minLength: 36
-                      maxLength: 36
-                      example: 71a9b613-1f4e-4247-6da9-fb66a7ab2a4b
+                      $ref: '#/components/schemas/UUID'
                     first_name:
-                      type: string
-                      minLength: 1
-                      maxLength: 255
-                      example: 田中
+                      $ref: '#/components/schemas/FirstName'
                     last_name:
-                      type: string
-                      minLength: 1
-                      maxLength: 255
-                      example: 太郎
+                      $ref: '#/components/schemas/LastName'
         '401':
-          description: unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    format: int32
-                  message:
-                    type: string
-                required:
-                  - code
-                  - message
-              example:
-                code: 401
-                message: Valid authentication credential lacks.
+          $ref: '#/components/responses/Unauthorized'
         '500':
-          description: internal server error
+          $ref: '#/components/responses/InternalServerError'
+  '/users/{user_id}/contents':
+    parameters:
+      - $ref: '#/components/parameters/UserId'
+    get:
+      operationId: users.id.contents.get
+      tags:
+        - content
+      summary: 特定のユーザーのコンテンツ一覧を取得するためのAPI
+      description: |
+        特定のユーザーの全てのコンテンツ一覧を返す。
+      responses:
+        '200':
+          description: '**Content List**'
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    format: int32
-                  message:
-                    type: string
-                required:
-                  - code
-                  - message
-              example:
-                code: 500
-                message: An unknown server error occurred internally.
-  '/users/{userId}/contents':
-    get:
-      operationId: users.userId.contents.get
-      tags:
-        - user
-      summary: 特定のユーザーのコンテンツ一覧を取得するためのAPI
+                type: array
+                items:
+                  $ref: '#/components/schemas/Content'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
   /contents:
     get:
       operationId: contents.get
@@ -814,12 +395,228 @@ paths:
         - content
       summary: 全コンテンツの一覧を取得するためのAPI
       description: |
-        `reply`テーブルに存在しない、トップレベルのコンテンツ一覧を返す。
+        `replies`テーブルに存在しない、トップレベルのコンテンツ一覧を返す。
+      responses:
+        '200':
+          description: '**Content List**'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Content'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
     post:
       operationId: contents.post
       tags:
         - content
       summary: コンテンツを新規作成するためのAPI
+      description: |
+        `contents`テーブルにリクエストユーザーを紐付けたレコードを作成する。
+
+        その際、以下の内容で`content_logs`テーブルにレコードを作成する。
+        - `content_id` : 作成したコンテンツのID
+        - `type` : `post`
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                detail:
+                  $ref: '#/components/schemas/ContentDetail'
+              required:
+                - detail
+      responses:
+        '201':
+          description: '**Created Content**'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Content'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  '/contents/{content_id}':
+    parameters:
+      - $ref: '#/components/parameters/ContentId'
+    patch:
+      operationId: contents.id.patch
+      tags:
+        - content
+      summary: 特定のコンテンツを編集するためのAPI
+      description: |
+        自分のコンテンツのみ編集可能
+
+        レコードを更新した際、以下の内容で`content_logs`テーブルにレコードを作成する。
+        - `content_id` : 更新したコンテンツのID
+        - `type` : `update`
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                detail:
+                  $ref: '#/components/schemas/ContentDetail'
+              required:
+                - detail
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      operationId: contents.id.delete
+      tags:
+        - content
+      summary: 特定のコンテンツを削除するためのAPI
+      description: |
+        自分のコンテンツのみ削除可能
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  '/contents/{content_id}/replies':
+    parameters:
+      - $ref: '#/components/parameters/ContentId'
+    get:
+      operationId: contents.id.replies.get
+      tags:
+        - content
+      summary: 特定のコンテンツの返信先・返信一覧を取得するためのAPI
+      description: |
+        `replies`テーブルからそれぞれ以下のように参照し、該当のコンテンツを返す。
+
+        - `parent`
+          - パラメータの`content_id`と`repliy_content_id`が一致するレコードがあれば、そのレコードの`parent_content_id`に紐づくコンテンツを取得する。無ければ`null`として返す。
+        - `children`
+          - パラメータの`content_id`と`parent_content_id`が一致するレコードの`reply_content_id`に紐づくコンテンツを一覧で取得する。
+      responses:
+        '200':
+          description: '**Reply Content(s)**'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  parent:
+                    description: 返信先のコンテンツ
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: UUID
+                        minLength: 36
+                        maxLength: 36
+                        example: 71a9b613-1f4e-4247-6da9-fb66a7ab2a4b
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            format: UUID
+                            minLength: 36
+                            maxLength: 36
+                            example: 71a9b613-1f4e-4247-6da9-fb66a7ab2a4b
+                          first_name:
+                            type: string
+                            minLength: 1
+                            maxLength: 255
+                            example: 田中
+                          last_name:
+                            type: string
+                            minLength: 1
+                            maxLength: 255
+                            example: 太郎
+                      detail:
+                        type: string
+                        minLength: 1
+                        maxLength: 65535
+                        example: >
+                          恥の多い生涯を送ってきました。
+
+                          自分には、人間の生活というものが、見当つかないのです。自分は東北の田舎に生れましたので、汽車をはじめて見たのは、よほど大きくなってからでした。
+                      updated_at:
+                        type: string
+                        format: date-time
+                      is_reply:
+                        type: boolean
+                        example: false
+                      replies_count:
+                        type: integer
+                        minimum: 0
+                    nullable: true
+                  children:
+                    description: コンテンツへの返信
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Content'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      operationId: contents.id.replies.post
+      tags:
+        - content
+      summary: 特定のコンテンツに返信するためのAPI
+      description: |
+        `contents`テーブルにリクエストユーザーを紐付けたレコードを作成する。
+
+        その際、`replies`テーブルに以下の内容でレコードを作成する。
+
+        - `parent_content_id` : パラメータの`content_id`
+        - `reply_content_id` : 作成したコンテンツのID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                detail:
+                  $ref: '#/components/schemas/ContentDetail'
+              required:
+                - detail
+      responses:
+        '201':
+          description: '**Created Content**'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Content'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 components:
   securitySchemes:
     Bearer:
@@ -839,9 +636,25 @@ components:
         - `exp` : トークンの有効期限 (UNIX時間)
 
         - `user_id` : ユーザーのID
+  parameters:
+    UserId:
+      in: path
+      name: user_id
+      description: ユーザーのID
+      required: true
+      schema:
+        $ref: '#/components/schemas/UUID'
+    ContentId:
+      in: path
+      name: content_id
+      description: コンテンツのID
+      required: true
+      schema:
+        $ref: '#/components/schemas/UUID'
   schemas:
     UUID:
       type: string
+      format: UUID
       minLength: 36
       maxLength: 36
       example: 71a9b613-1f4e-4247-6da9-fb66a7ab2a4b
@@ -850,7 +663,6 @@ components:
       format: email
       minLength: 1
       maxLength: 225
-      example: example@example.com
     Password:
       type: string
       format: password
@@ -869,6 +681,24 @@ components:
       description: リフレッシュトークン
       example: >-
         eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiZXhwIjoiMTIzNDU5ODc2MCIsInR5cGUiOiJyZWZyZXNoIn0.69IVLPFVZK_rXBo2___QIETaQc4TXm7nx-mFjSz6sOY
+    VerifyToken:
+      type: string
+      description: |
+        以下の仕様で生成されたHash値
+
+        - アルゴリズム : `bcrypt`
+        - ストレッチング : 8回
+      example: $2a$08$6LaQ6.VFF.pcG0Nktq8W2uIMZy4VA.VmLbt90kgBDF6SM1CgDTCn2
+    FirstName:
+      type: string
+      minLength: 1
+      maxLength: 255
+      example: 田中
+    LastName:
+      type: string
+      minLength: 1
+      maxLength: 255
+      example: 太郎
     User:
       type: object
       properties:
@@ -887,7 +717,58 @@ components:
           format: email
           minLength: 1
           maxLength: 225
-          example: example@example.com
+    ContentDetail:
+      type: string
+      minLength: 1
+      maxLength: 65535
+      example: |
+        恥の多い生涯を送ってきました。
+        自分には、人間の生活というものが、見当つかないのです。自分は東北の田舎に生れましたので、汽車をはじめて見たのは、よほど大きくなってからでした。
+    Content:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+          minLength: 36
+          maxLength: 36
+          example: 71a9b613-1f4e-4247-6da9-fb66a7ab2a4b
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+              format: UUID
+              minLength: 36
+              maxLength: 36
+              example: 71a9b613-1f4e-4247-6da9-fb66a7ab2a4b
+            first_name:
+              type: string
+              minLength: 1
+              maxLength: 255
+              example: 田中
+            last_name:
+              type: string
+              minLength: 1
+              maxLength: 255
+              example: 太郎
+        detail:
+          type: string
+          minLength: 1
+          maxLength: 65535
+          example: >
+            恥の多い生涯を送ってきました。
+
+            自分には、人間の生活というものが、見当つかないのです。自分は東北の田舎に生れましたので、汽車をはじめて見たのは、よほど大きくなってからでした。
+        updated_at:
+          type: string
+          format: date-time
+        is_reply:
+          type: boolean
+          example: false
+        replies_count:
+          type: integer
+          minimum: 0
     Error:
       type: object
       properties:
@@ -901,94 +782,60 @@ components:
         - message
   responses:
     NoContent:
-      description: no content
+      description: |
+        **No Content**
     BadRequest:
-      description: bad request
+      description: |
+        **Bad Request**
+        リクエストの内容や形式に不備があり、正しく処理することができない等
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-            required:
-              - code
-              - message
+            $ref: '#/components/schemas/Error'
           example:
             code: 400
             message: Error Detail(s)
     Unauthorized:
-      description: unauthorized
+      description: |
+        **Unauthorized**
+        認証情報がリクエストに含まれていない等
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-            required:
-              - code
-              - message
+            $ref: '#/components/schemas/Error'
           example:
             code: 401
             message: Valid authentication credential lacks.
     Forbidden:
-      description: forbidden
+      description: |
+        **Forbidden**
+        リクエストを実行する権限がない等
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-            required:
-              - code
-              - message
+            $ref: '#/components/schemas/Error'
           example:
             code: 403
             message: Insufficient permissions to a resource.
     NotFound:
-      description: not found
+      description: |
+        **Not Found**
+        パラメータに一致するリソース、その他リクエスト実行に必要なリソースが存在しない等
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-            required:
-              - code
-              - message
+            $ref: '#/components/schemas/Error'
           example:
             code: 404
             message: The requested resource could not be found.
     InternalServerError:
-      description: internal server error
+      description: |
+        **Internal Server Error**
+        予期しないサーバーエラー
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-            required:
-              - code
-              - message
+            $ref: '#/components/schemas/Error'
           example:
             code: 500
             message: An unknown server error occurred internally.
@@ -1000,4 +847,7 @@ tags:
   - name: user
     description: '**ユーザー**に関するAPI群'
   - name: content
-    description: '**コンテンツ**に関するAPI群'
+    description: |
+      **コンテンツ**に関するAPI群
+
+      コンテンツは基本的に`updated_at`の降順とする

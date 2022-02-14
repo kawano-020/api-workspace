@@ -1,0 +1,4 @@
+UserId:
+  $ref: "./UserId.yaml"
+ContentId:
+  $ref: "./ContentId.yaml"

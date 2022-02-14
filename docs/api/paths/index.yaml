@@ -12,7 +12,11 @@
   $ref: "./auth.me.yaml"
 /users:
   $ref: "./users.yaml"
-/users/{userId}/contents:
-  $ref: "./users.userId.contents.yaml"
+/users/{user_id}/contents:
+  $ref: "./users.id.contents.yaml"
 /contents:
   $ref: "./contents.yaml"
+/contents/{content_id}:
+  $ref: "./contents.id.yaml"
+/contents/{content_id}/replies:
+  $ref: "./contents.id.replies.yaml"

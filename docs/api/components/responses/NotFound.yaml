@@ -1,8 +1,10 @@
-description: not found
+description: |
+  **Not Found**
+  パラメータに一致するリソース、その他リクエスト実行に必要なリソースが存在しない等
 content:
   application/json:
     schema:
-      $ref: "../schemas/Error.yaml"
+      $ref: "#/components/schemas/Error"
     example:
       code: 404
       message: The requested resource could not be found.

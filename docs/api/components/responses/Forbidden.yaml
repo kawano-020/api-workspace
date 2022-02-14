@@ -1,8 +1,10 @@
-description: forbidden
+description: |
+  **Forbidden**
+  リクエストを実行する権限がない等
 content:
   application/json:
     schema:
-      $ref: "../schemas/Error.yaml"
+      $ref: "#/components/schemas/Error"
     example:
       code: 403
       message: Insufficient permissions to a resource.

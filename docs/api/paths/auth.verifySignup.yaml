@@ -5,7 +5,7 @@ post:
   security: []
   summary: ユーザーを本登録するためのAPI
   description: |
-    `signup_token`テーブルから、リクエストボディの`token`を検索し、
+    `signup_tokens`テーブルから、リクエストボディの`token`を検索し、
     
     該当するレコードがあった場合に、そのレコードに紐付くユーザーの`status`を`active`に変更し、該当の`signup_token`レコードを削除する。
 
@@ -18,22 +18,22 @@ post:
           type: object
           properties:
             token:
-              $ref: "../components/schemas/VerifyToken.yaml"
+              $ref: "#/components/schemas/VerifyToken"
           required:
             - token
   responses:
     "200":
-      description: generated tokens
+      description: "**Generated Tokens**"
       content:
         application/json:
           schema:
             type: object
             properties:
               access_token:
-                $ref: "../components/schemas/AccessToken.yaml"
+                $ref: "#/components/schemas/AccessToken"
               refresh_token:
-                $ref: "../components/schemas/RefreshToken.yaml"
+                $ref: "#/components/schemas/RefreshToken"
     "400":
-      $ref: "../components/responses/BadRequest.yaml"
+      $ref: "#/components/responses/BadRequest"
     "500":
-      $ref: "../components/responses/InternalServerError.yaml"
+      $ref: "#/components/responses/InternalServerError"

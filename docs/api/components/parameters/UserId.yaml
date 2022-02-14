@@ -1,0 +1,6 @@
+in: path
+name: user_id
+description: ユーザーのID
+required: true
+schema:
+  $ref: "#/components/schemas/UUID"

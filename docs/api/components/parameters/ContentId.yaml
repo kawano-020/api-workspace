@@ -1,0 +1,6 @@
+in: path
+name: content_id
+description: コンテンツのID
+required: true
+schema:
+  $ref: "#/components/schemas/UUID"

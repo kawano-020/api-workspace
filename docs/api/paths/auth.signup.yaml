@@ -5,7 +5,7 @@ post:
   security: []
   summary: ユーザーを仮登録するためのAPI
   description: |  
-    リクエスト成功時、リクエストの内容を基に`user`テーブルに`status`を`tmp`、`password_hash`には以下の仕様でHash化した値を使用してレコードを作成し、
+    リクエスト成功時、リクエストの内容を基に`users`テーブルに`status`を`tmp`、`password_hash`には以下の仕様でHash化した値を使用してレコードを作成し、
 
     - アルゴリズム : `bcrypt`
     - ストレッチング : 8回
@@ -17,7 +17,7 @@ post:
     - アルゴリズム : `bcrypt`
     - ストレッチング : 8回
 
-    その際、`signup_token`テーブルに発行したトークンをユーザーと紐づけて保存する。
+    その際、`signup_tokens`テーブルに発行したトークンをユーザーと紐づけて保存する。
 
     ```html
     仮登録を受付けました。
@@ -33,11 +33,11 @@ post:
       application/json:
         schema:
           allOf:
-            - $ref: "../components/schemas/User.yaml"
+            - $ref: "#/components/schemas/User"
             - type: object
               properties:
                 password:
-                  $ref: "../components/schemas/Password.yaml"
+                  $ref: "#/components/schemas/Password"
           required:
             - first_name
             - last_name
@@ -45,7 +45,7 @@ post:
             - password
   responses:
     "201":
-      description: created temporary user
+      description: "**Created Temporary User**"
       content:
         application/json:
           schema:
@@ -53,9 +53,9 @@ post:
               - type: object
                 properties:
                   id:
-                    $ref: "../components/schemas/UUID.yaml"
-              - $ref: "../components/schemas/User.yaml"
+                    $ref: "#/components/schemas/UUID"
+              - $ref: "#/components/schemas/User"
     "400":
-      $ref: "../components/responses/BadRequest.yaml"
+      $ref: "#/components/responses/BadRequest"
     "500":
-      $ref: "../components/responses/InternalServerError.yaml"
+      $ref: "#/components/responses/InternalServerError"

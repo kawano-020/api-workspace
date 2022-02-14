@@ -1,0 +1,54 @@
+parameters:
+  - $ref: "#/components/parameters/ContentId"
+patch:
+  operationId: contents.id.patch
+  tags:
+    - content
+  summary: 特定のコンテンツを編集するためのAPI
+  description: |
+    自分のコンテンツのみ編集可能
+
+    レコードを更新した際、以下の内容で`content_logs`テーブルにレコードを作成する。
+    - `content_id` : 更新したコンテンツのID
+    - `type` : `update`
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            detail:
+              $ref: "#/components/schemas/ContentDetail"
+          required:
+            - detail
+  responses:
+    "204":
+      $ref: "#/components/responses/NoContent"
+    "400":
+      $ref: "#/components/responses/BadRequest"
+    "401":
+      $ref: "#/components/responses/Unauthorized"
+    "403":
+      $ref: "#/components/responses/Forbidden"
+    "404":
+      $ref: "#/components/responses/NotFound"
+    "500":
+      $ref: "#/components/responses/InternalServerError"
+delete:
+  operationId: contents.id.delete
+  tags:
+    - content
+  summary: 特定のコンテンツを削除するためのAPI
+  description: |
+    自分のコンテンツのみ削除可能
+  responses:
+    "204":
+      $ref: "#/components/responses/NoContent"
+    "401":
+      $ref: "#/components/responses/Unauthorized"
+    "403":
+      $ref: "#/components/responses/Forbidden"
+    "404":
+      $ref: "#/components/responses/NotFound"
+    "500":
+      $ref: "#/components/responses/InternalServerError"

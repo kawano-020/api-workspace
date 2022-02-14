@@ -5,7 +5,7 @@ get:
   summary: ログインユーザーの情報を取得するためのAPI
   responses:
     "200":
-      description: logged in user
+      description: "**Logged in User**"
       content:
         application/json:
           schema:
@@ -13,12 +13,12 @@ get:
               - type: object
                 properties:
                   id:
-                    $ref: "../components/schemas/UUID.yaml"
-              - $ref: "../components/schemas/User.yaml"
+                    $ref: "#/components/schemas/UUID"
+              - $ref: "#/components/schemas/User"
     "401":
-      $ref: "../components/responses/UnAuthorized.yaml"
+      $ref: "#/components/responses/Unauthorized"
     "500":
-      $ref: "../components/responses/InternalServerError.yaml"
+      $ref: "#/components/responses/InternalServerError"
 patch:
   operationId: auth.me.patch
   tags:
@@ -35,19 +35,19 @@ patch:
       application/json:
         schema:
           allOf:
-            - $ref: "../components/schemas/User.yaml"
+            - $ref: "#/components/schemas/User"
             - type: object
               properties:
                 current_password:
-                  $ref: "../components/schemas/Password.yaml"
+                  $ref: "#/components/schemas/Password"
                 new_password:
-                  $ref: "../components/schemas/Password.yaml"
+                  $ref: "#/components/schemas/Password"
   responses:
     "204":
-      $ref: "../components/responses/NoContent.yaml"
+      $ref: "#/components/responses/NoContent"
     "400":
-      $ref: "../components/responses/BadRequest.yaml"
+      $ref: "#/components/responses/BadRequest"
     "401":
-      $ref: "../components/responses/UnAuthorized.yaml"
+      $ref: "#/components/responses/Unauthorized"
     "500":
-      $ref: "../components/responses/InternalServerError.yaml"
+      $ref: "#/components/responses/InternalServerError"

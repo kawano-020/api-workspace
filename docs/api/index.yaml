@@ -14,6 +14,9 @@ info:
     Twitterの簡易版のようなイメージ
 
     また、ユーザーの各アクションに対してログを作成していく
+  contact:
+    name: MyGithub
+    url: https://github.com/kawano-020
 
 servers:
   - url: 'http://localhost:28000'
@@ -24,6 +27,8 @@ paths:
 components:
   securitySchemes:
     $ref: "./components/securitySchemes/index.yaml"
+  parameters:
+    $ref: "./components/parameters/index.yaml"
   schemas:
     $ref: "./components/schemas/index.yaml"
   responses:
@@ -38,4 +43,7 @@ tags:
   - name: user
     description: "**ユーザー**に関するAPI群"
   - name: content
-    description: "**コンテンツ**に関するAPI群"
+    description: |
+      **コンテンツ**に関するAPI群
+
+      コンテンツは基本的に`updated_at`の降順とする

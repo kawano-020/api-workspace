@@ -1,5 +1,0 @@
-get:
-  operationId: users.userId.contents.get
-  tags:
-    - user
-  summary: 特定のユーザーのコンテンツ一覧を取得するためのAPI

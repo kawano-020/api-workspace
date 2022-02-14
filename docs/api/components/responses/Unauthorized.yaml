@@ -1,8 +1,10 @@
-description: unauthorized
+description: |
+  **Unauthorized**
+  認証情報がリクエストに含まれていない等
 content:
   application/json:
     schema:
-      $ref: "../schemas/Error.yaml"
+      $ref: "#/components/schemas/Error"
     example:
       code: 401
       message: Valid authentication credential lacks.

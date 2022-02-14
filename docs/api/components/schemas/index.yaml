@@ -8,7 +8,17 @@ AccessToken:
   $ref: "./AccessToken.yaml"
 RefreshToken:
   $ref: "./RefreshToken.yaml"
+VerifyToken:
+  $ref: "./VerifyToken.yaml"
+FirstName:
+  $ref: "./FirstName.yaml"
+LastName:
+  $ref: "./LastName.yaml"
 User:
   $ref: "./User.yaml"
+ContentDetail:
+  $ref: "./ContentDetail.yaml"
+Content:
+  $ref: "./Content.yaml"
 Error:
   $ref: "./Error.yaml"

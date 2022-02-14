@@ -1,8 +1,10 @@
-description: bad request
+description: |
+  **Bad Request**
+  リクエストの内容や形式に不備があり、正しく処理することができない等
 content:
   application/json:
     schema:
-      $ref: "../schemas/Error.yaml"
+      $ref: "#/components/schemas/Error"
     example:
       code: 400
       message: Error Detail(s)

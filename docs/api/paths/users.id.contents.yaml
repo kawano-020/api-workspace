@@ -1,0 +1,24 @@
+parameters:
+  - $ref: "#/components/parameters/UserId"
+get:
+  operationId: users.id.contents.get
+  tags:
+    - content
+  summary: 特定のユーザーのコンテンツ一覧を取得するためのAPI
+  description: |
+    特定のユーザーの全てのコンテンツ一覧を返す。
+  responses:
+    "200":
+      description: "**Content List**"
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/Content"
+    "401":
+      $ref: "#/components/responses/Unauthorized"
+    "404":
+      $ref: "#/components/responses/NotFound"
+    "500":
+      $ref: "#/components/responses/InternalServerError"

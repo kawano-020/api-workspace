@@ -5,7 +5,7 @@ get:
     - user
   responses:
     "200":
-      description: user list
+      description: "**User List**"
       content:
         application/json:
           schema:
@@ -14,12 +14,12 @@ get:
               type: object
               properties:
                 id:
-                  $ref: "../components/schemas/UUID.yaml"
+                  $ref: "#/components/schemas/UUID"
                 first_name:
-                  $ref: "../components/schemas/FirstName.yaml"
+                  $ref: "#/components/schemas/FirstName"
                 last_name:
-                  $ref: "../components/schemas/LastName.yaml"
+                  $ref: "#/components/schemas/LastName"
     "401":
-      $ref: "../components/responses/Unauthorized.yaml"
+      $ref: "#/components/responses/Unauthorized"
     "500":
-      $ref: "../components/responses/InternalServerError.yaml"
+      $ref: "#/components/responses/InternalServerError"
